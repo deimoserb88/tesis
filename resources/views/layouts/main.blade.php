@@ -87,7 +87,7 @@
                                 {{ explode(" ",Auth::user()->nombre)[0] }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                @if(Auth::user()->rol <= 9)
+                                @if(Auth::user()->priv < 5)
                                     <li><a href="{{ url('/academicoHome') }}">Panel de actividades <i class="fa fa-btn fa-tasks"></i></a></li>
                                 @else
                                     <li><a href="{{ url('/tesistaHome') }}">Panel de actividades <i class="fa fa-btn fa-tasks"></i></a></li>									

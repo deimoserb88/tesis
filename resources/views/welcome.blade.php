@@ -65,14 +65,13 @@
                                 <div class="panel-heading">Panel de actividades <i class="fa fa-btn fa-tasks"></i></div>
                                 <div class="panel-body">
                                   <ul class="nav nav-pills nav-stacked">
-                                  @if(in_array(Auth::user()->rol,[0,1,2,3,4,5]))
+                                  @if(in_array(Auth::user()->priv,[0,1,2,3]))
                                     <li><a href="/">Gestionar tesis</a></li>
                                     <li><a href="{{ url('/usuariosTesistas') }}">Gestionar usuarios</a></li>
-                                  @elseif(in_array(Auth::user()->rol,[6]))
-                                    <li><a href="/">Gestionar tesis asignadas</a></li>
-                                  @elseif(in_array(Auth::user()->rol,[7,8]))
+                                  @elseif(in_array(Auth::user()->priv,[4]))
+                                    <li><a href="/">Gestionar tesis asignadas</a></li>                                  
                                     <li><a href="{{ url('/') }}">Revisar tesis</a></li>
-                                  @elseif(Auth::user()->rol == 9)
+                                  @elseif(Auth::user()->priv == 5)
                                     <li><a href="/">Compartir tesis</a></li>                                    
                                     <li><a href="/">Subir documento</a></li>                                    
                                     <li><a href="/">Revisar tesis</a></li>

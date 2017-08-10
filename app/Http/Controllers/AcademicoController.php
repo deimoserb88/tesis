@@ -22,26 +22,31 @@ class AcademicoController extends Controller
     }
 
     public function usuariosAcademicos(Request $request){                
-        $u = User::where('rol','>',Auth::user()->rol)
-                    ->where('rol','<','9')
+        $u = User::where('priv','>',Auth::user()->priv)
+                    ->where('priv','<','5')
                     ->get();
-        $tipo_usuario = 1;//1~8 -> academicos
+        $tipo_usuario = 1;//1~4 -> academicos
         return view('academico.ua',compact('u','errores','tipo_usuario'));
     }
 
     public function usuariosTesistas(Request $request){                
-        $u = User::where('rol','=','9')->get();
-        $tipo_usuario = 9;//9 -> tesistas
+        $u = User::where('priv','=','5')->get();
+        $tipo_usuario = 5;//5 -> tesistas
+        return view('academico.ua',compact('u','errores','tipo_usuario'));
+    }
+    
+    public function usuariosNuevos(Request $request){                
+        $u = User::where('priv','=','9')->get();
+        $tipo_usuario = 9;//9 -> nuevos
     	return view('academico.ua',compact('u','errores','tipo_usuario'));
     }
     /**
      * [usuarioGuardar guardar susuarios por tipo]
      * @param  Request $request      [request]
-     * @param  string  $accion       [c->Crud, u->crUd]
-     * @param  string  $tipo_usuario [a->academico, t->tesista]
+     * @param  string  $accion       [c->Crud, u->crUd]     
      * @return [type]                [hace un redirect]
      */
-    public function usuarioGuardar(Request $request,$accion="c",$tipo_usuario='a'){
+    public function usuarioGuardar(Request $request,$accion="c"){
         
         if($accion=='c'){
             $reglas = [
@@ -62,8 +67,8 @@ class AcademicoController extends Controller
 
         if($validador->fails()){
             if($accion=='c'){
-                $u = User::where('rol','>',Auth::user()->rol)
-                        ->where('rol','<','9')
+                $u = User::where('priv','>',Auth::user()->priv)
+                        ->where('priv','<','5')
                         ->get();
                 $errores = $validador->errors();
                 return view('academico.ua',compact('u','errores','request'));
@@ -78,12 +83,14 @@ class AcademicoController extends Controller
             $u->nocontrol = $request->nocontrol;
             $u->login = $accion == 'c'?$request->nocontrol:$request->login;
             $u->email = $request->email;
-            $u->password = bcrypt($request->password);
-            $u->rol = $request->rol;
+            if($accion == 'c'){
+                $u->password = bcrypt($request->password);
+            }
+            $u->priv = $request->priv;
             $u->save();
-            if($tipo_usuario == 'a'){
+            if($request->priv < 5){
                 return redirect()->action('AcademicoController@usuariosAcademicos');
-            }elseif($tipo_usuario == 't'){
+            }else{
                 return redirect()->action('AcademicoController@usuariosTesistas');
             }
         }

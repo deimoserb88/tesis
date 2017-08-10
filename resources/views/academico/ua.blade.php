@@ -11,20 +11,26 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                 	<div class="row">
-                		<div class="col-md-8">
-                			<h4 style="display: inline;">Usuarios {{ tipoUsuario($tipo_usuario) }}</h4> | 
-                            <span style="color: white;">
-                            @if(Auth::user()->rol<=5)
-                                @if($tipo_usuario == 9)
-                                    <a href="{{ url('/usuariosAcademicos') }}" class="btn btn-xs">Ver usuarios académicos</a>
-                                @else
-                                    <a href="{{ url('/usuariosTesistas') }}" class="btn btn-xs">Ver usuarios tesistas</a>
+                		<div class="col-md-9">
+                			<h4 style="display: inline;">Usuarios </h4>                            
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default">{{ tipoUsuario($tipo_usuario) }}s</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>                                    
+                                </button>
+                                <ul class="dropdown-menu">
+                                @if(Auth::user()->priv<3)
+                                    <li><a href="{{ url('/usuariosAcademicos') }}">Ver académicos</a></li>
                                 @endif
-                            @endif
-                            </span>
+                                    <li><a href="{{ url('/usuariosTesistas') }}">Ver tesistas</a></li>
+                                    <li><a href="{{ url('/usuariosNuevos') }}">Ver nuevos</a></li>
+                                </ul>
+                            </div>            
+
+
                 		</div>
-                		<div class="col-md-4 text-right">
-                            @if(Auth::user()->rol <= 6)
+                		<div class="col-md-3 text-right">
+                            @if(Auth::user()->priv <= 3 )
                 		      <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#nuevousuario">Nuevo <i class="fa fa-btn fa-user-plus"></i></button>
                             @endif
                 		</div>
@@ -93,15 +99,15 @@
                     </div>
                   </div>                    
                   <div class="form-group{{ isset($errores)?($errores->has('nocontrol') ? ' has-error' : ''):''  }}">
-                    <label for="nocontrol" class="col-sm-4 control-label">Número de {{ $tipo_usuario<9?'trabajador':'cuenta' }}</label>
+                    <label for="nocontrol" class="col-sm-4 control-label">Número de {{ $tipo_usuario<5?'trabajador':'cuenta' }}</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="nocontrol" name="nocontrol" required="required" maxlength="5" value="{{ isset($request)?$request->nocontrol:'' }}">
+                      <input type="text" class="form-control" id="nocontrol" name="nocontrol" required="required" maxlength="8" value="{{ isset($request)?$request->nocontrol:'' }}">
                     </div>
                   </div>                    
                   <div class="form-group{{ isset($errores)?($errores->has('email') ? ' has-error' : ''):'' }}">
                     <label for="email" class="col-sm-4 control-label">Correo electrónico</label>
                     <div class="col-sm-8">
-                      <input type="email" class="form-control" id="email" name="email" required="required" value="{{ isset($request)?$request->email:'' }}">
+                      <input type="email" class="form-control" id="email" name="email" required="required" value="{{ isset($request)?$request->email:'' }}" placeholder="Debe ser institucional (@ucol.mx)">
                     </div>
                   </div>                    
                   <div class="form-group{{ isset($errores)?($errores->has('password') ? ' has-error' : ''):'' }}">
@@ -110,25 +116,31 @@
                       <input type="text" class="form-control" id="password" name="password" required="required">
                     </div>
                   </div>
-                    @if($tipo_usuario < 9)
-                      <div class="form-group{{ isset($errores)?($errores->has('rol') ? ' has-error' : ''):'' }}">
-                        <label for="password" class="col-sm-4 control-label">Rol</label>
+           
+                      <div class="form-group{{ isset($errores)?($errores->has('priv') ? ' has-error' : ''):'' }}">
+                        <label for="password" class="col-sm-4 control-label">Tipo usuario</label>
                         <div class="col-sm-8">
-                            <select name="rol" class="form-control" id="rol">
-                                @foreach(range(Auth::user()->rol+1,9) as $r)
-                                    <option value="{{ $r }}" {{ isset($request)?($r == $request->rol?'selected="selected"':''):'' }}>{{ tesis\User::rol($r) }}</option>
+                            @if(Auth::user()->priv<3)
+                            <select name="priv" class="form-control" id="priv">
+                                @foreach(range(Auth::user()->priv+1,5) as $r)
+                                    <option value="{{ $r }}" {{ isset($request)?($r == $request->priv?'selected="selected"':''):'' }}>{{ tesis\User::priv($r) }}</option>
                                 @endforeach
                             </select>
+                            @else
+                            <label>
+                            {{ tipoUsuario($tipo_usuario) }} <input type="hidden" name="priv" value="{{ $tipo_usuario }}">    
+                            </label>
+                            @endif
                         </div>
                       </div>
-                    @else
-                        <input type="hidden" name="rol" value="9">
-                    @endif
+
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <div class="btn-group" rol="group">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar <i class="fa fa-btn fa-close"></i></button>
+                        <button type="submit" class="btn btn-success">Guardar <i class="fa fa-btn fa-check"></i></button>
+                    </div>                    
                 </div>
             </form>
         </div><!-- /.modal-content -->

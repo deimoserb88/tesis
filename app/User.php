@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'nombre','nocontrol', 'email', 'password','login','rol','activo',
+        'nombre','nocontrol', 'email', 'password','login','priv','activo',
     ];
 
     /**
@@ -43,6 +43,18 @@ class User extends Authenticatable
                     ];
     public static function rol($r){
         return self::$roles[$r];
+    }   
+
+    private static $priv = [
+                            0 =>'root',
+                            1 =>'Administrador de plantel',
+                            2 =>'Administrador de programa (Coordinador/Presidente)',
+                            3 =>'Profesor de Seminario',
+                            4 =>'Docente',
+                            5 =>'Tesista',
+                    ];
+    public static function priv($p){
+        return self::$priv[$p];
     }   
 
  

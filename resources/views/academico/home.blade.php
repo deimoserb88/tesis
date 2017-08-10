@@ -9,8 +9,10 @@
                 <div class="panel-body">
                     <div class="list-group">
                         <a href="/tesis" class="list-group-item">Tesis</a>
-                        @if(in_array(Auth::user()->rol,[1,2,3,4,5]))
+                        @if(in_array(Auth::user()->priv,[1,2]))
                             <a href="/usuariosAcademicos" class="list-group-item">Usuarios académicos</a>
+                        @endif
+                        @if(in_array(Auth::user()->priv,[1,2,3,4,5]))
                             <a href="/usuariosTesistas" class="list-group-item">Usuarios tesistas</a>
                         @endif
                     </div>

@@ -28,6 +28,8 @@ Route::get('/usuariosAcademicos', 'AcademicoController@usuariosAcademicos')->nam
 
 Route::get('/usuariosTesistas', 'AcademicoController@usuariosTesistas')->name('usuariosTesistas');
 
+Route::get('/usuariosNuevos', 'AcademicoController@usuariosNuevos')->name('usuariosNuevos');
+
 Route::post('/usuarioGuardar/{accion?}/{tipo?}', 'AcademicoController@usuarioGuardar')->name('usuarioGuardar');
 
 Route::get('/usuarioEditar/{id}', function($id){
