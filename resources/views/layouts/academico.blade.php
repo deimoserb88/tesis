@@ -72,7 +72,12 @@
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
-
+                  <ul class="nav navbar-nav">
+                        <li><a href="{{ url('/tesis') }}">Tesis<i class="fa fa-btn fa-file-text-o"></i></a></li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ url('/usuariosTesistas') }}">Tesistas<i class="fa fa-btn fa-graduation-cap"></i></a></li>
+                    </ul>
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     @yield('menu_items')

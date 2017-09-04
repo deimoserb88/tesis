@@ -68,9 +68,9 @@
                                   @if(in_array(Auth::user()->priv,[0,1,2,3]))
                                     <li><a href="/">Gestionar tesis</a></li>
                                     <li><a href="{{ url('/usuariosTesistas') }}">Gestionar usuarios</a></li>
-                                  @elseif(in_array(Auth::user()->priv,[4]))
-                                    <li><a href="/">Gestionar tesis asignadas</a></li>                                  
-                                    <li><a href="{{ url('/') }}">Revisar tesis</a></li>
+                                  @elseif(in_array(Auth::user()->priv,[4]))                                    
+                                    <li><a href="{{ url('/tesisListar') }}">Gestionar tesis</a></li>
+                                    <li><a href="{{ url('/usuariosTesistas') }}">Tesistas</a></li>
                                   @elseif(Auth::user()->priv == 5)
                                     <li><a href="/">Compartir tesis</a></li>                                    
                                     <li><a href="/">Subir documento</a></li>                                    
