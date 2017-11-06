@@ -28,23 +28,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    private static $roles = [
-                            0 =>'root',
-                            1 =>'Director',
-                            2 =>'Coordinador académico',
-                            3 =>'Coordinador de carrera',
-                            4 =>'Presidente de academia',
-                            5 =>'Titular de Seminario de tesis',
-                            6 =>'Asesor de tesis',
-                            7 =>'Coasesor de tesis',
-                            8 =>'Revisor',
-                            9 =>'Tesista',
-                    ];
-    public static function rol($r){
-        return self::$roles[$r];
-    }   
-
+ 
     private static $priv = [
                             0 =>'root',
                             1 =>'Administrador de plantel',

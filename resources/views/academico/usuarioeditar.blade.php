@@ -50,6 +50,18 @@
                         </select>
                     </div>
                   </div>
+                  <div class="form-group hidden gen">
+                    <label for="gen" class="col-sm-4 control-label">Generación</label>
+                    <div class="col-sm-2">
+                        <select name="gen" class="form-control" id="gen">                            
+                                <option value="{{ date("Y") }}">{{ date("Y") }}</option>                            
+                                <option value="{{ date("Y")+1 }}">{{ date("Y")+1 }}</option>                            
+                                <option value="{{ date("Y")+2 }}">{{ date("Y")+2 }}</option>                            
+                        </select>
+                    </div>
+                    <div class="col-md-6">&nbsp;</div>
+                  </div>
+
 
                 </div>					
                 <div class="panel-footer">
@@ -95,6 +107,23 @@
           @else
         	   window.location.href = '{{ url('/usuariosTesistas') }}';
           @endif
+        });
+
+        var p = parseInt($('#priv').val());
+        if(p === 5){
+          $('.gen').removeClass('hidden');
+        }else{
+          $('.gen').addClass('hidden');
+        }
+
+
+        $('#priv').change(function(){
+          var p = parseInt($(this).val());
+          if(p === 5){
+            $('.gen').removeClass('hidden');
+          }else{
+            $('.gen').addClass('hidden');
+          }
         });
 
     });

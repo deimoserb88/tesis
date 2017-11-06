@@ -26,8 +26,8 @@
                                     <span class="caret"></span>                                    
                                 </button>
                                 <ul class="dropdown-menu">
-                                    @foreach($g as $gen)
-                                        <li><a href="{{ url('/usuariosTesistas/'.$gen->gen) }}">{{ $gen->gen }}</a></li>
+                                    @foreach($g as $gene)
+                                        <li><a href="{{ url('/usuariosTesistas/'.$gene->gen) }}">{{ $gene->gen }}</a></li>
                                     @endforeach
                                     <li role="separator" class="divider"></li>
                                     <li><a href="{{ url('/usuariosTesistas') }}">Todas las generaciones</a></li>
@@ -56,16 +56,23 @@
 							</tr>
 						</thead>
 						<tbody>
-							@foreach($u as $ut)
+							@foreach($u as $usuario)
+                                {{-- solo con rol 5 o menor en el programa del tesista puede hacer cambios --}}
+                                @php
+                                    $rolvalido = false;
+                                    foreach($rol as $roles){
+                                        $rolvalido = $rolvalido || ($usuario->idprograma == $roles['idprograma'] && $roles['rol'] <= 5);
+                                    }
+                                @endphp                            
 								<tr>
-									<td>{{ $ut->nocontrol }}</td>
-                                    <td>{{ $ut->nombre }}</td>									
+									<td>{{ $usuario->nocontrol }}</td>
+                                    <td>{{ $usuario->nombre }}</td>									
                                     <td>
-                                        @if(Auth::user()->priv<=3)
-                                            <a href="#" class="carrera" data-pk="{{ $ut->id }}">
-                                            @if(!is_null($ut->idprograma))
+                                        @if((Auth::user()->priv<=3 && $rolvalido) || Auth::user()->priv == 1)
+                                            <a href="#" class="carrera" data-pk="{{ $usuario->id }}">
+                                            @if(!is_null($usuario->idprograma))
                                                 @foreach($p as $carr)
-                                                    @if($carr->id == $ut->idprograma)
+                                                    @if($carr->id == $usuario->idprograma)
                                                         {{ $carr->abrev }}
                                                     @endif
                                                 @endforeach
@@ -75,7 +82,7 @@
                                             @php
                                                 $x = false;
                                                 foreach($p as $carr){
-                                                    if($carr->id == $ut->idprograma){
+                                                    if($carr->id == $usuario->idprograma){
                                                         echo $carr->abrev;
                                                         $x = true;
                                                     }                                                
@@ -87,11 +94,11 @@
                                         @endif
                                     </td>                                    
                                     <td>
-                                        @if(Auth::user()->priv<=3)
-                                            @if(!is_null($ut->idprograma))
-                                                <a href="#" class="gen" data-pk="{{ $ut->id }}">
-                                                @if($ut->gen!='')
-                                                    {{ $ut->gen }}
+                                        @if((Auth::user()->priv<=3 && $rolvalido) || Auth::user()->priv == 1)
+                                            @if(!is_null($usuario->idprograma))
+                                                <a href="#" class="gen" data-pk="{{ $usuario->id }}">
+                                                @if($usuario->gen!='')
+                                                    {{ $usuario->gen }}
                                                 @endif
                                                 </a>
                                             @else
@@ -101,22 +108,27 @@
                                                 </a>
                                             @endif
                                         @else
-                                            @if($ut->gen!='')
-                                                {{ $ut->gen }}
+                                            @if($usuario->gen!='')
+                                                {{ $usuario->gen }}
                                             @else
                                                 ND
                                             @endif                                        
                                         @endif
                                     </td>                                    
-									<td class="text-center">
-                                        @if(Auth::user()->priv <=3 )
+									<td>
+                                        @if(Auth::user()->priv <= 3 )
                                             <div class="btn-group" rol="group">                                                
-                                                <a href="{{ url('/usuarioEditar/'.$ut->id) }}" class="btn btn-info btn-sm"><i class="fa  fa-pencil"></i></a>
-                                                <a href="#" class="btn btn-danger btn-sm eliminar" data-nombre="{{ $ut->nombre }}" data-id="{{ $ut->id }}:{{ $ut->priv }}" ><i class="fa fa-trash"></i></a>
+                                                <a href="{{ url('/usuarioEditar/'.$usuario->id) }}" class="btn btn-info btn-sm"><i class="fa  fa-pencil"></i></a>
+                                                <a href="#" class="btn btn-info btn-sm dt {{ $usuario->idtesis==''?'disabled':'' }}" data-idtesis="{{ $usuario->idtesis }}"  data-nombre="{{ $usuario->nombre }}"><i class="fa fa-file-text"></i></a> 
+                                                
+
+                                                @if($rolvalido || Auth::user()->priv == 1)
+                                                    <a href="#" class="btn btn-danger btn-sm eliminar" data-nombre="{{ $usuario->nombre }}" data-id="{{ $usuario->id }}:{{ $usuario->priv }}" ><i class="fa fa-trash"></i></a>
+                                                @endif                                                
                                             </div>                                       
                                         @else
 								            <div class="btn-group" rol="group">                                                
-                                                <a href="#" class="btn btn-info btn-sm" data-nombre="{{ $ut->nombre }}" data-id="{{ $ut->id }}:{{ $ut->priv }}" ><i class="fa fa-file-text"></i></a>
+                                                <a href="#" class="btn btn-info btn-sm dt" data-idtesis="{{ $usuario->idtesis }}" data-nombre="{{ $usuario->nombre }}"><i class="fa fa-file-text"></i></a>
                                             </div>                                                                               
                                         @endif
 									</td>
@@ -193,7 +205,6 @@
                         </div>
                       </div>
 
-
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" rol="group">
@@ -202,6 +213,43 @@
                     </div>                    
                 </div>
             </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+{{-- Modal para ver detalles del tesista: titrulo de tesis, descripcion, asesor, coasesro, etc. --}}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="detalletesista">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cancelar" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title nombre-tesista"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2 etitulo">Titulo:</div>
+                        <div class="col-sm-10 dtitulo"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 edescripcion">Descripción:</div>
+                        <div class="col-sm-10 ddescripcion"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 easesor">Asesor:</div>
+                        <div class="col-sm-10 dasesor"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 eestado">Estado:</div>
+                        <div class="col-sm-10 destado"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal"><i class="fa fa-check"></i></button>                        
+                    </div>
+                </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -281,6 +329,30 @@
         });
 
         $('[data-toggle="tooltip"]').tooltip()
+
+        $('.dt').click(function(){
+            var dt = $(this);
+            $('.nombre-tesista').text(dt.data('nombre'));
+            var r = $.post(
+                        "{{ url('getTesisDetalle') }}",
+                        {
+                            idtesis:dt.data("idtesis"),
+                            _token:$('meta[name="csrf-token"]').attr("content")
+                        }
+                    );
+            
+            r.done(function(resp){
+                
+                $('.dtitulo').html('<strong>'+resp[0].nom+'</strong>');
+                $('.ddescripcion').html('<strong>'+resp[0].desc+'</strong>');
+                $('.dasesor').html('<strong>'+resp[1].nombre+'</strong>');
+                $('.destado').html('<strong>'+resp[0].estado+'</strong>');
+                
+            });  
+
+            $('#detalletesista').modal('toggle');
+
+        });
 
     });
 

@@ -13,6 +13,7 @@ use tesis\Tesis;
 use tesis\Tesista;
 use tesis\Programa;
 use tesis\UT;
+use tesis\Rol;
 
 
 
@@ -28,7 +29,7 @@ class AcademicoController extends Controller
     	return view('academico.home');
     }
 
-    public function usuariosAcademicos(Request $request){                
+    public function usuariosAcademicos(){                
         $u = User::where('priv','>',Auth::user()->priv)
                     ->where('priv','<','5')
                     ->get();
@@ -38,16 +39,31 @@ class AcademicoController extends Controller
 
     public function usuariosTesistas(Request $request,$gen=''){        
         //$gen = $gen==''?$gen:'%'.$gen.'%';
+        $rol = $request->session()->get('rol');
+        if(Auth::user()->priv > 1){
+            $progs = array_column($rol,'idprograma');
+            $ut = $request->session()->get('ut');//tesis con las que está relacionado el usuario
+        }else{
+            $progs = Programa::select('id')->get()->toArray();            
+        }
+
+        //return $rol;
+
         $u = User::select(DB::raw('users.id,users.nombre,users.nocontrol,users.priv,tesista.idtesis,tesista.idprograma,tesista.gen'))
-                    ->leftJoin('tesista','users.id','=','tesista.idusuario')
+                    ->join('tesista','users.id','=','tesista.idusuario')
                     ->where('users.priv','=','5')
                     ->where('tesista.gen','like','%'.$gen.'%')
+                    ->whereIn('tesista.idprograma',$progs)
                     ->get(); 
-        $p = Programa::select('id','programa','abrev')->where('activo','=',1)->get();
-        $g = Tesista::distinct('gen')->where('gen','!=','')->get();
-        return view('academico.ut',compact('u','p','g','gen'));
+        $p = User::select('programa.id','programa.programa','programa.abrev')
+                    ->join('rol','users.id','=','rol.idusuario')
+                    ->join('programa','rol.idprograma','=','programa.id')
+                    ->where('users.id','=',Auth::user()->id)->get();
+        $g = Tesista::select(DB::raw('distinct(gen)'))->where('gen','!=','')->get();
+        return view('academico.ut',compact('u','p','g','ut','gen','rol'));
     }
     
+
     public function usuariosNuevos(Request $request){                
         $u = User::where('priv','=','9')->get();
         $tipo_usuario = 9;//9 -> nuevos
@@ -55,13 +71,15 @@ class AcademicoController extends Controller
     }
 
 
-
+/*select a.id,a.programa,a.abrev
+from users c inner join rol b on c.id = b.idusuario inner join programa a on b.idprograma = a.id
+where c.id = 4*/
 
 
     /**
      * [usuarioGuardar guardar susuarios por tipo]
      * @param  Request $request      [request]
-     * @param  string  $accion       [c->Crud, u->crUd]     
+     * @param  string  $accion       [c->Create, u->Update]     
      * @return [type]                [hace un redirect]
      */
     public function usuarioGuardar(Request $request,$accion="c"){
@@ -115,7 +133,8 @@ class AcademicoController extends Controller
             if($request->priv == 5){
                 $datos = [
                     'idusuario'=>$u->id,
-                    'idprograma'=>(isset($request->carr)?$request->carr:null),                    
+                    'idprograma'=>(isset($request->carr)?$request->carr:null), 
+                    'gen'=>$request->gen                  
                     ];
                 $t = Tesista::firstOrCreate($datos);
             }            
@@ -144,6 +163,62 @@ class AcademicoController extends Controller
     }
 
 
+    public function usuarioRoles(Request $request,$id,$d='R'){
+        //Las tesis que imparte
+        $t = Tesis::select('tesis.nom','tesis.gen','tesis.estado','ut.rol')
+                    ->join('ut','tesis.id','=','ut.idtesis')
+                    ->where('ut.idusuario','=',$id)
+                    ->get();
+        
+        //los roles que tiene
+        $r = Rol::select('rol.id','rol.rol','programa.programa')
+                    ->join('programa','rol.idprograma','=','programa.id')
+                    ->where('rol.idusuario','=',$id)
+                    ->get();
+        //su nombre
+        $u = User::select('id','nombre','nocontrol')
+                    ->where('id','=',$id)
+                    ->get();
+
+        //los programas del plantel        
+        if(Auth::user()->priv == 1){//si tiene privilegios 1 (el mas alto)
+            $p = Programa::all();
+        }else{//si tiene privilegios 2, aqui no se llega con privilegios menores
+            $p = Rol::select('programa.programa','programa.id')
+                        ->join('programa','rol.idprograma','=','programa.id')
+                        ->where('rol.idusuario','=',Auth::user()->id)
+                        ->get();
+        }
+        $g = Tesis::select(DB::raw('distinct(gen)'))->get();
+
+        $urol = $request->session()->get('rol'); //el rol del usuario en sesion
+
+        //en caso de 
+        //return $urol;
+        if($d == 'R'){
+            return view('academico.usuariorol',compact('t','r','u','p','g','urol'));
+        }elseif($d == 'T'){            
+            return view('academico.usuariotesis',compact('t','r','u','p','g','urol'));            
+        }
+
+    }
+
+
+
+
+
+
+
+    public function rolAsignar(Request $request){
+        Rol::insert([
+                    'idusuario'=>$request->id,
+                    'idprograma'=>$request->prog,
+                    'rol'=>$request->rol,
+                ]);
+        return redirect()->route('usuarioRoles',['id'=>$request->id]);
+    }
+
+
     public function asignaCarr(Request $request){
         if($request->ajax()){
             
@@ -166,9 +241,102 @@ class AcademicoController extends Controller
         }
     }
 
-    public function tesis(){
-        
-        return view('academico.tesis');
+
+/**
+ * TESIS 
+ */
+
+    public function tesisNueva(){
+        $idusuario = null;
+        switch(Auth::user()->priv){
+            case 1: $idusuario = "%%";break;
+            case 4: $idusuario = Auth::user()->id;break;
+            default:;
+        }
+        $progs = Programa::select('programa.id','programa.programa')
+                        ->join('rol','programa.id','=','rol.idprograma')
+                        ->where('rol.idusuario','=',$idusuario)
+                        ->distinct()
+                        ->get();
+        return view('academico.tesisnueva',compact('progs'));        
     }
+
+
+    public function tesisGuardar(Request $request){
+        $t = new Tesis;
+        $t->idprograma = $request->idprograma;
+        $t->nom = $request->titulo;
+        $t->gen = $request->gen;
+        $t->desc = $request->desc;
+        $t->tesistas = $request->tesistas;
+        $t->save();
+
+        $ut = new UT(['idtesis'=>$t->id,'idusuario'=>Auth::user()->id]);
+        $ut->idprograma = $request->idprograma;
+        $ut->rol = 6;
+        $ut->save();
+
+        return redirect()->action('AcademicoController@tesis');
+        
+    }
+
+
+    public function tesisAsignar(Request $request){
+        UT::updateOrCreate([
+                    'idusuario'=>$request->id,
+                    'idtesis'=>$request->idtesis,
+                    'idprograma'=>$request->prog,
+                    'rol'=>$request->rol                 
+                ]);
+        return redirect()->route('usuarioRoles',['id'=>$request->id]);
+    }
+
+    /****************************************
+     * [Listado de Tesis]
+     * @return $tesis
+     */
+    public function tesis(Request $request){
+        $idusuario = null;
+        switch(Auth::user()->priv){
+            case 1: $idusuario = "%%";break;
+            case 4: $idusuario = Auth::user()->id;break;
+            default:;
+        }
+        $urol = $request->session()->get('rol');
+
+
+        $tesis = Tesis::select('tesis.*','programa.abrev')
+                    ->join('programa','tesis.idprograma','=','programa.id')
+                    ->join('ut','tesis.id','=','ut.idtesis')                    
+                    ->where('ut.idusuario','like',$idusuario)
+                    ->distinct()
+                    ->get();        
+        return view('academico.tesis',compact('tesis','urol'));
+    }
+
+
+    public function getTesisDetalle(Request $request){
+        if($request->ajax()){
+            
+            $t = Tesis::select('desc')
+                        ->where('id','=',$request->idtesis)
+                        ->get()->toArray();
+            $a = User::select('users.nombre','ut.rol')
+                        ->join('ut','users.id','=','ut.idusuario')
+                        ->where('ut.idtesis','=',$request->idtesis)
+                        ->get()->toArray();
+            $ts = User::select('users.nombre')
+                        ->join('tesista','users.id','=','tesista.idusuario')
+                        ->where('tesista.idtesis','=',$request->idtesis)
+                        ->get()->toArray();
+            
+            //return ['tesis'=>$t,'docentes'=>$a,'tesistas'=>$ts];
+            return response()->json(['tesis'=>$t,'docentes'=>$a,'tesistas'=>$ts]);       
+
+        }else{
+            return false;
+        }        
+    }
+
 
 }

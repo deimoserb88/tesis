@@ -14,6 +14,15 @@ class UT extends Model
      * @var array
      */
     protected $fillable = [
-        'idprograma','rol'
+        'idprograma','rol','idusuario','idtesis'
     ];
+
+    public function User(){
+    	return $this->belongsTo('tesis\User','idusuario');
+    }
+
+    public function Tesis(){
+    	return $this->belongsTo('tesis\Tesis','idtesis');
+    }
+
 }

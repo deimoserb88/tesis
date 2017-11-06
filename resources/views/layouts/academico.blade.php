@@ -72,18 +72,20 @@
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                  <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/tesis') }}">Tesis<i class="fa fa-btn fa-file-text-o"></i></a></li>
-                    </ul>
-                    <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/usuariosTesistas') }}">Tesistas<i class="fa fa-btn fa-graduation-cap"></i></a></li>
-                    </ul>
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url('/tesis') }}">Tesis<i class="fa fa-btn fa-file-text-o"></i></a></li>
+                    <li><a href="{{ url('/usuariosTesistas') }}">Tesistas<i class="fa fa-btn fa-graduation-cap"></i></a></li>
+                    @if(Auth::user()->priv <= 2)
+                        <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios <i class="fa fa-btn fa-users"></i></a></li>
+                    @endif
+                </ul>
+
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     @yield('menu_items')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ explode(" ",Auth::user()->nombre)[0] }} <span class="caret"></span>
+                            {{ explode(" ",Auth::user()->nombre)[0]." (".Auth::user()->priv.")"  }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ url('/academicoHome') }}">Panel de actividades <i class="fa fa-btn fa-tasks"></i></a></li>

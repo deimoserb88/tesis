@@ -55,7 +55,10 @@
                                         @if(Auth::user()->priv <=3 )
 								            <div class="btn-group" rol="group">                                                
                                                 <a href="{{ url('/usuarioEditar/'.$ua->id) }}" class="btn btn-info btn-sm"><i class="fa  fa-pencil"></i></a>
+                                                <a href="{{ url('/usuarioRoles/'.$ua->id) }}" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="right" title="Definir roles"><i class="fa  fa-cogs"></i></a>
+                                                <a href="{{ url('/usuarioTesis/'.$ua->id.'/T') }}" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="left" title="Asignar tesis"><i class="fa  fa-bookmark"></i></a>
                                                 <a href="#" class="btn btn-danger btn-sm eliminar" data-nombre="{{ $ua->nombre }}" data-id="{{ $ua->id }}:{{ $ua->priv }}" ><i class="fa fa-trash"></i></a>
+                                            
                                             </div>                                       
                                         @endif
 									</td>
@@ -138,6 +141,17 @@
                             @endif
                         </div>
                       </div>
+                      <div class="form-group hidden gen">
+                        <label for="gen" class="col-sm-4 control-label">Generación</label>
+                        <div class="col-sm-3">
+                            <select name="gen" class="form-control" id="gen">                            
+                                    <option value="{{ date("Y") }}">{{ date("Y") }}</option>                            
+                                    <option value="{{ date("Y")+1 }}">{{ date("Y")+1 }}</option>                            
+                                    <option value="{{ date("Y")+2 }}">{{ date("Y")+2 }}</option>                            
+                            </select>
+                        </div>
+                        <div class="col-md-5">&nbsp;</div>
+                      </div>                      
 
 
                 </div>
@@ -193,6 +207,24 @@
             }
         });
 
+        $('[data-toggle="tooltip"]').tooltip();
+
+        var p = parseInt($('#priv').val());
+        if(p === 5){
+          $('.gen').removeClass('hidden');
+        }else{
+          $('.gen').addClass('hidden');
+        }
+
+
+        $('#priv').change(function(){
+          var p = parseInt($(this).val());
+          if(p === 5){
+            $('.gen').removeClass('hidden');
+          }else{
+            $('.gen').addClass('hidden');
+          }
+        });
     });
 
 </script>
