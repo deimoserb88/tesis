@@ -65,6 +65,17 @@ Route::get('/tesis','AcademicoController@tesis')->name('tesis');
 
 Route::get('/tesisNueva', 'AcademicoController@tesisNueva')->name('tesisNueva');
 
+Route::get('/tesisEditar/{id}', function($id){
+	$d = tesis\Tesis::where('id','=',$id)->get();
+	return view('academico.tesiseditar',compact('t'));
+})->name('tesisNueva');
+
+Route::get('/tesisAprobar/{id}', function($id){
+	tesis\Tesis::where('id','=',$id)->update(['estado'=>2]);
+	return redirect()->route('tesis');
+});
+
+
 Route::post('/tesisAsignar','AcademicoController@tesisAsignar')->name('tesisAsignar');
 
 Route::post('/tesisGuardar','AcademicoController@tesisGuardar')->name('tesisGuardar');

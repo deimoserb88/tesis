@@ -205,10 +205,6 @@ where c.id = 4*/
 
 
 
-
-
-
-
     public function rolAsignar(Request $request){
         Rol::insert([
                     'idusuario'=>$request->id,
@@ -247,15 +243,13 @@ where c.id = 4*/
  */
 
     public function tesisNueva(){
-        $idusuario = null;
-        switch(Auth::user()->priv){
-            case 1: $idusuario = "%%";break;
-            case 4: $idusuario = Auth::user()->id;break;
-            default:;
-        }
+       
+        $idusuario = Auth::user()->id;
+       
         $progs = Programa::select('programa.id','programa.programa')
                         ->join('rol','programa.id','=','rol.idprograma')
                         ->where('rol.idusuario','=',$idusuario)
+                        ->where('rol.rol','=',6)
                         ->distinct()
                         ->get();
         return view('academico.tesisnueva',compact('progs'));        
@@ -296,22 +290,40 @@ where c.id = 4*/
      * @return $tesis
      */
     public function tesis(Request $request){
-        $idusuario = null;
-        switch(Auth::user()->priv){
-            case 1: $idusuario = "%%";break;
-            case 4: $idusuario = Auth::user()->id;break;
-            default:;
-        }
+        
+        //tesis que administra como director, cord. acad., cord. carrera, presidente academia o profesor de seminario
         $urol = $request->session()->get('rol');
+        
+        //se obtienen todos los programas en los que el usuario tiene un rol entre 1 y 5
+        $progs = []; 
+        foreach($urol as $ur){
+            if($ur['rol'] <= 5){
+                $progs[] = $ur['idprograma'];
+            }
+        }    
 
+        //los usuarios con privilegios 1 pueden ver las tesis de todos los programas
+        if(Auth::user()->priv == 1){
+            $tesisA = Tesis::select('tesis.*','programa.abrev')
+                        ->join('programa','tesis.idprograma','=','programa.id')                        
+                        ->get();        
 
-        $tesis = Tesis::select('tesis.*','programa.abrev')
+        }else{        
+            $tesisA = Tesis::select('tesis.*','programa.abrev')
+                        ->join('programa','tesis.idprograma','=','programa.id')
+                        ->whereIn('programa.id',$progs)
+                        ->get();        
+        }
+        
+        //Tesis en las que participa como asesor, coasesor o revisor
+        $idusuario = Auth::user()->id;
+        $tesisP = Tesis::select('tesis.*','programa.abrev','ut.rol')
                     ->join('programa','tesis.idprograma','=','programa.id')
                     ->join('ut','tesis.id','=','ut.idtesis')                    
                     ->where('ut.idusuario','like',$idusuario)
                     ->distinct()
                     ->get();        
-        return view('academico.tesis',compact('tesis','urol'));
+        return view('academico.tesis',compact('tesisA','tesisP','urol'));
     }
 
 

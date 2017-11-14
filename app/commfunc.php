@@ -8,7 +8,7 @@
             case 3:;
             case 4:return "Académico";break;
             case 5:return "Tesista";break;
-            case 9: return "Nuevo";break;
+            case 9:return "Nuevo";break;
 
         }
     }

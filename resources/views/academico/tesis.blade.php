@@ -8,19 +8,72 @@
 
 <div class="container">
 
-    <div class="panel panel-default" style="width: 75%;margin: 0 auto;">
+    <div class="panel panel-default" style="width: 75%;margin: 0 auto 30px;">
 		<div class="panel-heading">
 			<div class="row">
 			<div class="col-sm-10"><h3 class="panel-title">Tesis</h3></div>
 			<div class="col-sm-2">
-			    @if(Auth::user()->priv == 4)
-			    	<a href="{{ url('/tesisNueva') }}" class="btn btn-sm btn-default">Nueva tesis <i class="fa fa-btn fa-file-text-o"></i> </a>    	
+			    @if(in_array(6, array_column($urol, 'rol')))
+			    	<a href="{{ url('/tesisNueva') }}" class="btn btn-sm btn-default">Tesis nueva <i class="fa fa-btn fa-file-text-o"></i> </a>    	
 			    @endif				
 			</div>
 			</div>
 		</div>
 		<div class="panel-body">
-			<table class="table table-striped table-hover" id="tesis" style="width: 100%;">
+
+			@if(count($tesisA)>0)
+			<div class="alert alert-info alert-dismissible">
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				  Tesis de las carreras en las que tiene rol de gestión (Director, Coordinador académica, jefe de carrera, presidente de academia, titular de seminario de investigación)
+			</div>
+			<table class="table table-striped table-hover tesis" id="tesisA" style="width: 100%;">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Titulo</th>
+						<th>Carr.</th>					
+						<th>Gen.</th>
+						<th>Estado</th>
+						<th class="text-center" style="min-width: 100px;"><i class="fa fa-gear"></i></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach($tesisA as $t)
+						<tr>
+							<td>{{ $t->id }}</td>
+							<td>
+								<button class="btn btn-link dt" data-idtesis="{{ $t->id }}">
+									{{ $t->nom }}
+								</button>
+							</td>	
+							<td>{{ $t->abrev }}</td>	
+							<td>{{ $t->gen }}</td>
+							<td>{{ tesis\Tesis::tesisEstado($t->estado) }}</td>
+							<td  class="text-right">								
+								<div class="btn-group" rol="group">
+								@if($t->estado == 1 && in_array(4, array_column($urol, 'rol')))
+									<a class="btn btn-success btn-xs aprobar" href="{{ url('tesisAprobar/'.$t->id) }}">Aprobar<i class="fa fa-btn fa-check"></i></a>
+								@endif
+								@if(($t->estado>=2&&$t->estado<=3)&&(Auth::user()->priv>=2&&Auth::user()->priv<=3))
+								{{-- Boton para asignar tesistas --}}	
+									<button class="btn btn-primary btn-xs" type="button"><i class="fa fa-btn fa-user"></i></button>
+								@endif
+								<a class="btn btn-primary btn-xs disabled" href="#"><i class="fa fa-btn fa-file-pdf-o"></i></a>
+								</div>
+
+							</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+			<hr>
+			@endif
+
+			<div class="alert alert-info alert-dismissible">
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				  Tesis en las que participa como asesor, coasesor o revisor
+			</div>
+			<table class="table table-striped table-hover tesis" id="tesisP" style="width: 100%;">
 				<thead>
 					<tr>
 						<th>ID</th>
@@ -32,34 +85,30 @@
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($tesis as $t)
+					@foreach($tesisP as $t)
 						<tr>
 							<td>{{ $t->id }}</td>
 							<td>
 								<a href="#" class="dt" data-idtesis="{{ $t->id }}">
 								{{ $t->nom }}
-								</a>
+								</a> | {{ tesis\Rol::rol($t->rol) }}
 							</td>	
 							<td>{{ $t->abrev }}</td>	
 							<td>{{ $t->gen }}</td>
 							<td>{{ tesis\Tesis::tesisEstado($t->estado) }}</td>
-							<td>								
-								@if($t->estado == 1 && in_array(4, array_column($urol, 'rol')))
-									<button class="btn btn-success btn-xs">Aprobar<i class="fa fa-btn fa-check"></i></button>
-								@endif
-								@if($t->estado>=2&&$t->estado<=3)
-								{{-- Botn para asignar tesistas --}}	
-								<div class="btn-group" rol="group">
-									<button class="btn btn-primary btn-xs" type="button"><i class="fa fa-btn fa-user-plus"></i></button>
-									<button class="btn btn-danger btn-xs" type="button"><i class="fa fa-btn fa-user-times"></i></button>
+							<td>	
+								<div class="btn-group" rol="group">							
+								@if($t->rol == 6)
+									<button class="btn btn-primary btn-xs"><i class="fa fa-btn fa-pencil"></i></button>
+								@endif		
+									<button class="btn btn-primary btn-xs disabled"><i class="fa fa-btn fa-file-pdf-o"></i></button>
 								</div>
-								@endif
-		
 							</td>
 						</tr>
 					@endforeach
 				</tbody>
 			</table>
+					
 		</div>
 		<div class="panel-footer">
 			Detalles de la tesis. De clic en el título de la tesis para ver sus detalles
@@ -120,7 +169,7 @@
     		$('.detalles-tesis').show();
     	});
 
-        $('#tesis').DataTable({
+        $('.tesis').DataTable({
             "scrollY": 480,
             "scrollCollapse": true,
             "paging": false,
