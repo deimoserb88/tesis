@@ -12,7 +12,7 @@
                 <div class="panel-heading">
                 	<div class="row">
                 		<div class="col-md-12">
-                			<h4 style="display: inline;">Actividad del usuario: {{ $u[0]->nombre }}, {{ $u[0]->nocontrol }} </h4>
+                			<h4 style="display: inline;">Actividad del usuario: <span class="label label-warning"> {{ $u[0]->nombre }}, {{ $u[0]->nocontrol }}</span> </h4>
                 		</div>
                 	</div>                	
                 </div>
@@ -107,7 +107,7 @@
                     <label for="rol" class="col-sm-4 control-label">Rol</label>
                     <div class="col-sm-8">                            
                         <select name="rol" class="form-control" id="rol" required="required">                            
-                            @foreach(range(6,8) as $i)
+                            @foreach(range(7,8) as $i)
                                 <option value="{{ $i }}">{{ tesis\Rol::rol($i) }}</option>
                             @endforeach                            
                         </select>
@@ -172,9 +172,9 @@
             at.done(function(resp){
                 var r = '';
                 resp.forEach(function(v){
-                    r = '<option value="' + v.id + '">' + v.nom + '</option>'+"\n";
-                    $('#idtesis').html(r);
+                    r += '<option value="' + v.id + '">' + v.nom + '</option>'+"\n";
                 });
+                $('#idtesis').html(r);
                 if(r === ''){
                    $('#idtesis').html('<option disabled="disabled">No hay tesis para el programa y generación seleccionados</option>');
                 }                

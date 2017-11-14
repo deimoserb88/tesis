@@ -29,16 +29,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
  
-    private static $priv = [
-                            0 =>'root',
-                            1 =>'Administrador de plantel',
-                            2 =>'Administrador de programa (Coordinador/Presidente)',
-                            3 =>'Profesor de Seminario',
-                            4 =>'Docente',
-                            5 =>'Tesista',
-                    ];
     public static function priv($p){
-        return self::$priv[$p];
+        return ['root',
+                'Administrador de plantel',
+                'Administrador de programa (Coordinador/Presidente)',
+                'Profesor de Seminario',
+                'Docente',
+                'Tesista',
+                ][$p];
     }   
 
  

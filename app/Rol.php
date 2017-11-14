@@ -22,19 +22,17 @@ class Rol extends Model
     }     
 
     public static function rol($r){
-		$roles = [
-                    0 =>'root',
-                    1 =>'Director',
-                    2 =>'Coordinador académico',
-                    3 =>'Coordinador de carrera',
-                    4 =>'Presidente de academia',
-                    5 =>'Titular de Seminario de tesis',
-                    6 =>'Asesor de tesis',
-                    7 =>'Coasesor de tesis',
-                    8 =>'Revisor',
-                    9 =>'Tesista',
-                    ];    	
-        return $roles[$r];
+		return [0 =>'root',
+                1 =>'Director',
+                2 =>'Coordinador académico',
+                3 =>'Coordinador de carrera',
+                4 =>'Presidente de academia',
+                5 =>'Titular de Seminario de tesis',
+                6 =>'Asesor',
+                7 =>'Coasesor',
+                8 =>'Revisor',
+                9 =>'Tesista',
+                ][$r];
     } 
 
 }

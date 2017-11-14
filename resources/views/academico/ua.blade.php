@@ -55,8 +55,12 @@
                                         @if(Auth::user()->priv <=3 )
 								            <div class="btn-group" rol="group">                                                
                                                 <a href="{{ url('/usuarioEditar/'.$ua->id) }}" class="btn btn-info btn-sm"><i class="fa  fa-pencil"></i></a>
-                                                <a href="{{ url('/usuarioRoles/'.$ua->id) }}" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="right" title="Definir roles"><i class="fa  fa-cogs"></i></a>
-                                                <a href="{{ url('/usuarioTesis/'.$ua->id.'/T') }}" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="left" title="Asignar tesis"><i class="fa  fa-bookmark"></i></a>
+                                                @if(strlen($ua->nocontrol)<=4)
+                                                    <a href="{{ url('/usuarioRoles/'.$ua->id) }}" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="left" title="Definir roles"><i class="fa  fa-cogs"></i></a>
+                                                @endif
+                                                @if($tipo_usuario != 9)
+                                                    <a href="{{ url('/usuarioTesis/'.$ua->id.'/T') }}" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="left" title="Asignar tesis"><i class="fa  fa-bookmark"></i></a>
+                                                @endif
                                                 <a href="#" class="btn btn-danger btn-sm eliminar" data-nombre="{{ $ua->nombre }}" data-id="{{ $ua->id }}:{{ $ua->priv }}" ><i class="fa fa-trash"></i></a>
                                             
                                             </div>                                       
@@ -141,7 +145,17 @@
                             @endif
                         </div>
                       </div>
-                      <div class="form-group hidden gen">
+                      <div class="form-group hidden genprog">
+                        <label for="carr" class="col-sm-4 control-label">Programa</label>
+                        <div class="col-sm-8">
+                            <select name="carr" class="form-control" id="carr"> 
+                                @foreach($p as $prog)
+                                    <option value="{{ $prog->id }}">{{ $prog->programa }}</option>
+                                @endforeach
+                            </select>
+                        </div>                        
+                      </div>  
+                      <div class="form-group hidden genprog">
                         <label for="gen" class="col-sm-4 control-label">Generación</label>
                         <div class="col-sm-3">
                             <select name="gen" class="form-control" id="gen">                            
@@ -211,18 +225,18 @@
 
         var p = parseInt($('#priv').val());
         if(p === 5){
-          $('.gen').removeClass('hidden');
+          $('.genprog').removeClass('hidden');
         }else{
-          $('.gen').addClass('hidden');
+          $('.genprog').addClass('hidden');
         }
 
 
         $('#priv').change(function(){
           var p = parseInt($(this).val());
           if(p === 5){
-            $('.gen').removeClass('hidden');
+            $('.genprog').removeClass('hidden');
           }else{
-            $('.gen').addClass('hidden');
+            $('.genprog').addClass('hidden');
           }
         });
     });

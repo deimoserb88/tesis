@@ -12,7 +12,7 @@
                 <div class="panel-heading">
                 	<div class="row">
                 		<div class="col-md-12">
-                			<h4 style="display: inline;">Actividad del usuario: {{ $u[0]->nombre }}, {{ $u[0]->nocontrol }} </h4>
+                			<h4 style="display: inline;">Actividad del usuario: <span class="label label-warning">{{ $u[0]->nombre }}, {{ $u[0]->nocontrol }}</span> </h4>
                 		</div>
                 	</div>                	
                 </div>
@@ -99,6 +99,12 @@
                         </select>
                     </div>
                   </div>
+                  <div class="form-group hidden dgen {{ isset($errores)?($errores->has('gen') ? ' has-error' : ''):'' }}">
+                    <label for="password" class="col-sm-4 control-label">Generación</label>
+                    <div class="col-sm-8">                            
+                        {{ Form::number('gen',date('Y')) }}
+                    </div>
+                  </div>
 
                 </div>
                 <div class="modal-footer">
@@ -169,6 +175,14 @@
             });
         });
 
+        $('#rol').change(function(){
+            var r = $(this);
+            if(r.val() === '9'){
+                $('.dgen').removeClass('hidden');
+            }else{
+                $('.dgen').addClass('hidden');                
+            }
+        });
 
 
     });

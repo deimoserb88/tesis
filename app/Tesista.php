@@ -16,4 +16,8 @@ class Tesista extends Model
     protected $fillable = [
         'idprograma','idusuario', 'idtesis','gen',
     ];
+
+    public function User(){
+    	return $this->belongsTo('tesis\User','idusuario');
+    }    
 }

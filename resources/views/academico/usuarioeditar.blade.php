@@ -42,15 +42,34 @@
                     
                   <div class="form-group{{ isset($errores)?($errores->has('priv') ? ' has-error' : ''):'' }}">
                     <label for="password" class="col-sm-4 control-label">Tipo de usuario</label>
-                    <div class="col-sm-8">
-                        <select name="priv" class="form-control" id="priv">
-                            @foreach(range(Auth::user()->priv+1,5) as $p)
-                                <option value="{{ $p }}" {{ ($p == $u->first()->priv?'selected="selected"':'') }}>{{ tesis\User::priv($p) }}</option>
-                            @endforeach
-                        </select>
+                    <div class="col-sm-8">                        
+                        @if(strlen($u->first()->nocontrol) == 4)
+                          @if(Auth::user()->priv <= 2){{-- Solo si tiene privilegios 1 o 2 puede cambiar los privilegios del usuario --}}
+                          <select name="priv" class="form-control" id="priv">
+                              @foreach(range(Auth::user()->priv+1,5) as $prv)
+                                  <option value="{{ $prv }}" {{ ($prv == $u->first()->priv?'selected="selected"':'') }}>{{ tesis\User::priv($prv) }}</option>
+                              @endforeach
+                          </select>
+                          @else
+                              {{ tesis\User::priv($u->first()->priv) }}
+                          @endif
+                        @else
+                          <input type="hidden" name="priv" value="5">
+                          <h4>Tesista</h4>
+                        @endif
                     </div>
                   </div>
-                  <div class="form-group hidden gen">
+                  <div class="form-group {{ (strlen($u->first()->nocontrol) == 4?'hidden':'') }} genprog">
+                    <label for="carr" class="col-sm-4 control-label">Programa</label>
+                    <div class="col-sm-8">
+                        <select name="carr" class="form-control" id="carr"> 
+                            @foreach($p as $prog)
+                                <option value="{{ $prog->id }}">{{ $prog->programa }}</option>
+                            @endforeach
+                        </select>
+                    </div>                        
+                  </div>                   
+                  <div class="form-group {{ (strlen($u->first()->nocontrol) == 4?'hidden':'') }} genprog">
                     <label for="gen" class="col-sm-4 control-label">Generación</label>
                     <div class="col-sm-2">
                         <select name="gen" class="form-control" id="gen">                            
@@ -61,7 +80,6 @@
                     </div>
                     <div class="col-md-6">&nbsp;</div>
                   </div>
-
 
                 </div>					
                 <div class="panel-footer">
@@ -81,7 +99,7 @@
                 	<div class="row">
 	                	<div class="col-md-4 col-md-offset-8">
 		                	<div class="btn-group" role="group" aria-label="">
-		                    	<button type="button" class="btn btn-danger cancelar" data-dismiss="modal">Cancelar <i class="fa fa-btn fa-close"></i> </button>
+		                    	<button type="button" class="btn btn-danger cancelar">Cancelar <i class="fa fa-btn fa-close"></i> </button>
 		                    	<button type="submit" class="btn btn-success">Guardar <i class="fa fa-btn fa-check"></i></button>
 		                    </div>
 	                    </div>
@@ -102,10 +120,10 @@
     $(document).ready(function() {
 
         $('.cancelar').click(function(){
-          @if($u->first()->priv < 5)
-             window.location.href = '{{ url('/usuariosAcademicos') }}';
-          @else
+          @if($u->first()->priv == 5)
         	   window.location.href = '{{ url('/usuariosTesistas') }}';
+          @else
+             window.location.href = '{{ url('/usuariosAcademicos') }}';
           @endif
         });
 

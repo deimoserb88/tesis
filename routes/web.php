@@ -23,6 +23,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/academicoHome', 'AcademicoController@index')->name('academicoHome');
+
+
 /**
  * Usuarios
  */
@@ -39,9 +41,18 @@ idtu-> id y tipo de usuario con formato id:tu, tu se usa para mostrar la lista c
  */
 Route::get('/usuarioEliminar/{idtu}', 'AcademicoController@usuarioEliminar')->name('usuarioEliminar');
 
-Route::get('/usuarioEditar/{id}', function($id){
-	        $u = tesis\User::where('id','=',$id)->get();
-    		return view('academico.usuarioeditar',compact('u'));
+Route::get('/usuarioEditar/{id}', function(Request $request,$id){
+		$urol = $request->session()->get('rol');
+	    $u = tesis\User::where('id','=',$id)->get();
+        if(Auth::user()->priv == 1){
+            $p = tesis\Programa::all();
+        }else{
+            $p = tesis\Rol::select('programa.programa','programa.id')
+                        ->join('programa','rol.idprograma','=','programa.id')
+                        ->where('rol.idusuario','=',Auth::user()->id)
+                        ->get();
+        }
+    	return view('academico.usuarioeditar',compact('u','urol','p'));
 })->name('usuarioEditar');
 
 
@@ -65,7 +76,21 @@ Route::get('/tesis','AcademicoController@tesis')->name('tesis');
 
 Route::get('/tesisNueva', 'AcademicoController@tesisNueva')->name('tesisNueva');
 
+Route::get('/tesisEditar/{id}', function($id){
+	$d = tesis\Tesis::where('id','=',$id)->get();
+	return view('academico.tesiseditar',compact('t'));
+})->name('tesisNueva');
+
+Route::get('/tesisAprobar/{id}', function($id){
+	tesis\Tesis::where('id','=',$id)->update(['estado'=>2]);
+	return redirect()->route('tesis');
+});
+
+Route::get('/tesisTesista/{id}','AcademicoController@tesisTesista')->name('tesisTesista');
+
 Route::post('/tesisAsignar','AcademicoController@tesisAsignar')->name('tesisAsignar');
+
+Route::get('/asignaTesista/{idtesis}/{idtesista}','AcademicoController@asignaTesista')->name('asignaTesista');
 
 Route::post('/tesisGuardar','AcademicoController@tesisGuardar')->name('tesisGuardar');
 
@@ -93,7 +118,7 @@ Route::post('/getTesisId', function(Request $request){
 								->get()->toArray();
 		return response()->json($tesis);				
 	}else{
-		return false;
+		return [false];
 	}
 })->name('getTesisId');
 
@@ -107,10 +132,28 @@ Route::post('/asignaCarr', 'AcademicoController@asignaCarr')->name('asignaCarr')
 
 Route::post('/asignaGen', 'AcademicoController@asignaGen')->name('asignaGen');
 
+//la siguente ruta es para que el tesiste se asigna la carrera y la generacion a si mismo
+Route::post('/tesistaProGen','HomeController@tesistaProGen')->name('tesistaProGen');
 
 
+/**
+ * Mensajes
+ */
 
 
-/*Auth::routes();
+Route::get('/mensajes/{idu}/{fmensajes}', 'AcademicoController@mensajes')->name('mensajes');
 
-Route::get('/home', 'HomeController@index')->name('home');*/
+Route::post('/enviarMensaje','AcademicoController@enviarMensaje')->name('enviarMensaje');
+
+Route::post('/leerMensaje',function(Request $request){
+	if($request->ajax()){
+		$mensaje = tesis\Mensaje::select('mensaje.*','users.nombre')
+									->join('users','mensaje.idusuario_de','=','users.id')
+									->where('mensaje.id','=',$request->idmensaje)
+									->get()->toArray();
+		tesis\Mensaje::where('mensaje.id','=',$request->idmensaje)->update(['leido'=>'1']);
+		return response()->json($mensaje);
+	}else{
+		return [false];
+	}
+});

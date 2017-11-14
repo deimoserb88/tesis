@@ -39,7 +39,7 @@
                 		</div>
                 		<div class="col-md-3 text-right">
                             @if(Auth::user()->priv <= 3 )
-                		      <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#nuevousuario">Nuevo <i class="fa fa-btn fa-user-plus"></i></button>
+                		      <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#nuevousuario">Nuevo <i class="fa fa-btn fa-user-plus"></i></button>
                             @endif
                 		</div>
                 	</div>                	
@@ -69,15 +69,15 @@
                                     <td>{{ $usuario->nombre }}</td>									
                                     <td>
                                         @if((Auth::user()->priv<=3 && $rolvalido) || Auth::user()->priv == 1)
-                                            <a href="#" class="carrera" data-pk="{{ $usuario->id }}">
                                             @if(!is_null($usuario->idprograma))
+                                            <a href="#" class="carrera" data-pk="{{ $usuario->id }}">
                                                 @foreach($p as $carr)
                                                     @if($carr->id == $usuario->idprograma)
                                                         {{ $carr->abrev }}
                                                     @endif
                                                 @endforeach
-                                            @endif
                                             </a>
+                                            @endif
                                         @else
                                             @php
                                                 $x = false;
@@ -120,7 +120,6 @@
                                             <div class="btn-group" rol="group">                                                
                                                 <a href="{{ url('/usuarioEditar/'.$usuario->id) }}" class="btn btn-info btn-sm"><i class="fa  fa-pencil"></i></a>
                                                 <a href="#" class="btn btn-info btn-sm dt {{ $usuario->idtesis==''?'disabled':'' }}" data-idtesis="{{ $usuario->idtesis }}"  data-nombre="{{ $usuario->nombre }}"><i class="fa fa-file-text"></i></a> 
-                                                
 
                                                 @if($rolvalido || Auth::user()->priv == 1)
                                                     <a href="#" class="btn btn-danger btn-sm eliminar" data-nombre="{{ $usuario->nombre }}" data-id="{{ $usuario->id }}:{{ $usuario->priv }}" ><i class="fa fa-trash"></i></a>
@@ -225,7 +224,7 @@
         <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close cancelar" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title nombre-tesista"></h4>
+                    <h4 class="modal-title nombre-tesista bg-warning"></h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -246,8 +245,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div class="text-center">
-                        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal"><i class="fa fa-check"></i></button>                        
+                    <div class="text-right">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
         </div><!-- /.modal-content -->
@@ -334,7 +333,7 @@
             var dt = $(this);
             $('.nombre-tesista').text(dt.data('nombre'));
             var r = $.post(
-                        "{{ url('getTesisDetalle') }}",
+                        "{{ url('/getTesisDetalle') }}",
                         {
                             idtesis:dt.data("idtesis"),
                             _token:$('meta[name="csrf-token"]').attr("content")
@@ -342,11 +341,11 @@
                     );
             
             r.done(function(resp){
-                
-                $('.dtitulo').html('<strong>'+resp[0].nom+'</strong>');
-                $('.ddescripcion').html('<strong>'+resp[0].desc+'</strong>');
-                $('.dasesor').html('<strong>'+resp[1].nombre+'</strong>');
-                $('.destado').html('<strong>'+resp[0].estado+'</strong>');
+                console.log(resp);
+                $('.dtitulo').html('<strong>'+resp['tesis'][0].nom+'</strong>');
+                $('.ddescripcion').html('<strong>'+resp['tesis'][0].desc+'</strong>');
+                $('.dasesor').html('<strong>'+resp['asesor'][0].nombre+'</strong>');
+                $('.destado').html('<strong>'+['','','','Asignada','Concluida'][resp['tesis'][0].estado]+'</strong>');
                 
             });  
 

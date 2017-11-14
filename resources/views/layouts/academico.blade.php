@@ -10,8 +10,8 @@
 	<link type="image/x-icon" href="http://www.ucol.mx/cms/img/favicon.ico" rel="icon" />
     <!-- Styles -->
     {{ Html::style('public/assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}  
-    {{ Html::style('https://fonts.googleapis.com/css?family=Lato:100,300,400,700') }}<!-- Fonts -->
-    {{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css') }}<!-- Iconos -->   
+    {{ Html::style('https://fonts.googleapis.com/css?family=Lato:100,300,400,700') }}<!-- Fonts -->    
+    {{ Html::style('https://file.myfontastic.com/YkvRruhw4K6cVhm9Z6RdGC/icons.css') }}<!-- Iconos -->   
     {{ Html::style('http://www.ucol.mx/cms/headerfooterapp.css') }}	 {{-- CSS de la universidad --}}
 
     @yield('estilos') <!--Para agregar estilos propios de cada modulo-->
@@ -37,6 +37,10 @@
         .fa-btn {
             margin-left: 6px;
         }
+        .lm {
+            border-radius: 45%;
+        }
+
     </style>
 	
 </head>
@@ -67,31 +71,45 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    TESIS <i class="fa fa-btn fa-home"></i>
+                    TESIS <i class="fas fa-home"></i>
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/tesis') }}">Tesis<i class="fa fa-btn fa-file-text-o"></i></a></li>
-                    <li><a href="{{ url('/usuariosTesistas') }}">Tesistas<i class="fa fa-btn fa-graduation-cap"></i></a></li>
+                    <li><a href="{{ url('/tesis') }}">Tesis <i class="fas fa-file-alt"></i></a></li>
+                    <li><a href="{{ url('/usuariosTesistas') }}">Tesistas <i class="fas fa-graduation-cap"></i></a></li>
                     @if(Auth::user()->priv <= 2)
-                        <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios <i class="fa fa-btn fa-users"></i></a></li>
+                        <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios <i class="fas fa-users"></i></a></li>
                     @endif
                 </ul>
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     @yield('menu_items')
+                    <li>
+                        <a href="{{ '/mensajes/'.Auth::user()->id.'/2' }}">
+                            @php
+                                $mnl = tesis\Mensaje::where('idusuario_para','=',Auth::user()->id)->where('leido','=','0')->count();
+                            @endphp
+                            @if($mnl>0)
+                                <i class="fas fa-comment text-danger" ></i>
+                                <span class="label label-danger lm">{{ $mnl }}</span>
+                            @else
+                                <i class="fas fa-comment text-muted" ></i> 
+                                <span class="label label-default lm">{{ $mnl }}</span>                                
+                            @endif
+                        </a>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ explode(" ",Auth::user()->nombre)[0]." (".Auth::user()->priv.")"  }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('/academicoHome') }}">Panel de actividades <i class="fa fa-btn fa-tasks"></i></a></li>
+                            <li><a href="{{ url('/academicoHome') }}">Panel de actividades <i class="fas fa-tasks"></i></a></li>
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                        Cerrar sesión <i class="fa fa-btn fa-sign-out"></i>
+                                        Cerrar sesión <i class="fas fa-sign-out-alt"></i>
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         {{ csrf_field() }}
@@ -139,6 +157,8 @@
 
     {{ Html::script('/public/assets/vendor/jquery/dist/jquery.min.js') }}
     {{ Html::script('/public/assets/vendor/bootstrap/dist/js/bootstrap.min.js') }}
+    {{ Html::script('/public/js/typeahead.bundle.js') }}
+    {{ Html::script('https://use.fontawesome.com/releases/v5.0.1/js/all.js') }}
 
    	@yield('scripts'){{--Para scripts propios del módulo--}}	
 
