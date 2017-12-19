@@ -220,7 +220,6 @@ where c.id = 4*/
     }
 
 
-
     public function rolAsignar(Request $request){
        
         $datos = [  'idusuario'=>$request->id,
@@ -256,6 +255,24 @@ where c.id = 4*/
          
             return response()->json(['success'=>true]);
         }
+    }
+
+
+//cuenta del usuario
+    public function usuarioCuenta(Request $request){
+        //roles activos
+        $r = Rol::select('rol.rol','programa.programa')
+                    ->join('programa','programa.id','=','rol.idprograma')
+                    ->where('rol.idusuario','=',Auth::user()->id)
+                    ->get();
+
+        $t = UT::select('tesis.nom','tesis.gen','tesis.estado','programa.programa')
+                    ->join('tesis','tesis.id','=','ut.idtesis')
+                    ->join('programa','programa.id','=','ut.idprograma')
+                    ->where('ut.idusuario','=',Auth::user()->id)
+                    ->get();
+        return view('academico.usuarioCuenta',compact('r','t'));
+
     }
 
 
@@ -311,7 +328,7 @@ where c.id = 4*/
     }
 
     public function tesisTesista(Request $request,$id){
-        $t = Tesis::select('tesis.id','tesis.nom','programa.abrev')
+        $t = Tesis::select('tesis.id','tesis.nom','tesis.tesistas','programa.abrev')
                     ->join('programa','tesis.idprograma','=','programa.id')
                     ->where('tesis.id','=',$id)
                     ->get();
@@ -344,8 +361,9 @@ where c.id = 4*/
     public function tesis(Request $request){
         
         //tesis que administra como director, cord. acad., cord. carrera, presidente academia o profesor de seminario
+        $urol = [];
         $urol = $request->session()->get('rol');
-        
+        //return $urol ;
         //se obtienen todos los programas en los que el usuario tiene un rol entre 1 y 5
         $progs = []; 
         foreach($urol as $ur){

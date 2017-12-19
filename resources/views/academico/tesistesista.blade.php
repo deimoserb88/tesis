@@ -19,15 +19,19 @@
                 <div class="panel-body">
                     <div class="alert alert-info">
                     <div class="row">                        
-                        <div class="col-sm-8">Tesistas:</div>
-                        <div class="col-sm-4 text-right">
-                            @if(Auth::user()->priv == 2 || Auth::user()->priv == 3)
-                            <button class="btn btn-default btn-xs"  data-toggle="modal" data-target="#asignatesis">Asignar <i class="fas fa-plus"></i> </button>
+                        <div class="col-sm-2">Tesistas:</div>
+                        <div class="col-sm-10 text-right">
+                            @if(count($ta) < $t[0]->tesistas)
+                                @if(Auth::user()->priv == 2 || Auth::user()->priv == 3)
+                                <button class="btn btn-default btn-xs"  data-toggle="modal" data-target="#asignatesis">Asignar <i class="fas fa-plus"></i> </button>
+                                @endif
+                            @else
+                                Esta tesis ya tiene el número de tesistas asignados por el asesor: <span class="label label-danger"> {{ $t[0]->tesistas }}</span>
                             @endif
                         </div>                        
                     </div>
                     </div>
-					<table class="table table-striped" id="tua">
+					<table class="table table-striped">{{--  id="tua" --}}
 						<thead>
 							<tr>
 								<th>No. Cta.</th>

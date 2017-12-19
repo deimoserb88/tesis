@@ -55,6 +55,7 @@ Route::get('/usuarioEditar/{id}', function(Request $request,$id){
     	return view('academico.usuarioeditar',compact('u','urol','p'));
 })->name('usuarioEditar');
 
+/*Usuarios y sus roles*/
 
 Route::get('/usuarioRoles/{id}/{d?}','AcademicoController@usuarioRoles')->name('usuarioRoles');
 
@@ -68,6 +69,10 @@ Route::get('/quitarRol/{id}/{idusuario}', function($id,$idusuario){
 Route::get('/usuarioTesis/{id}/{d?}', function($id,$d='T'){
 	return redirect()->route('usuarioRoles',['id'=>$id,'d'=>$d]);
 })->name('usuarioTesis');
+
+//Cuenta del usuario
+Route::get('/usuarioCuenta','AcademicoController@usuarioCuenta')->name('usuarioCuenta');
+
 
 /**
  * Tesis
