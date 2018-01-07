@@ -1,0 +1,515 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"th",
+				"this\tkeyword"
+			],
+			[
+				"ma",
+				"margin-left"
+			],
+			[
+				"valu",
+				"value_two\tlet"
+			],
+			[
+				"value",
+				"value_one\tlet"
+			],
+			[
+				"va",
+				"value_two\tlet"
+			],
+			[
+				"parse",
+				"parseInt\tfunction"
+			],
+			[
+				"Pip",
+				"PipeTransform\talias"
+			],
+			[
+				"im",
+				"implements\tkeyword"
+			],
+			[
+				"con",
+				"console\tvar"
+			],
+			[
+				"Ac",
+				"ActivatedRoute\talias"
+			],
+			[
+				"b",
+				"background"
+			],
+			[
+				"app",
+				"appRoutingProviders\talias"
+			],
+			[
+				"Modul",
+				"ModuleWithProviders\talias"
+			],
+			[
+				"com",
+				"component\tproperty"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"backgr",
+				"background-color"
+			],
+			[
+				"For",
+				"FormsModule\talias"
+			],
+			[
+				"trabaj",
+				"trabajador_externo\tproperty"
+			],
+			[
+				"mar",
+				"margin-top"
+			],
+			[
+				"border-r",
+				"border-radius"
+			],
+			[
+				"text-a",
+				"text-align"
+			],
+			[
+				"tex",
+				"text-align"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"marg",
+				"margin-left"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"inicia",
+				"iniciaHammer"
+			],
+			[
+				"ini",
+				"iniciaFastClick"
+			],
+			[
+				"font-s",
+				"font-size"
+			],
+			[
+				"margi",
+				"margin-top"
+			],
+			[
+				"wi",
+				"width"
+			],
+			[
+				"onc",
+				"onclick\tAttr"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app/Http/Controllers/AcademicoController.php",
+			"settings":
+			{
+				"buffer_size": 3332,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/academico/ua.blade.php",
+			"settings":
+			{
+				"buffer_size": 8177,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 357.0,
+		"last_filter": "Package Control: ",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 431.0
+	},
+	"console":
+	{
+		"height": 127.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/erosales/Documentos/trabajo/tesis",
+		"/home/erosales/Documentos/trabajo/tesis/app",
+		"/home/erosales/Documentos/trabajo/tesis/app/Http",
+		"/home/erosales/Documentos/trabajo/tesis/app/Http/Controllers",
+		"/home/erosales/Documentos/trabajo/tesis/resources",
+		"/home/erosales/Documentos/trabajo/tesis/resources/views",
+		"/home/erosales/Documentos/trabajo/tesis/resources/views/academico",
+		"/home/erosales/Documentos/trabajo/tesis/vendor/laravel",
+		"/home/erosales/Documentos/trabajo/tesis/vendor/laravel/framework",
+		"/home/erosales/Documentos/trabajo/tesis/vendor/laravel/framework/src",
+		"/home/erosales/Documentos/trabajo/tesis/vendor/laravel/framework/src/Illuminate",
+		"/home/erosales/Documentos/trabajo/tesis/vendor/laravel/framework/src/Illuminate/Foundation",
+		"/home/erosales/Documentos/trabajo/tesis/vendor/laravel/framework/src/Illuminate/Foundation/Auth"
+	],
+	"file_history":
+	[
+		"/home/erosales/Documentos/trabajo/tesis/.env",
+		"/home/erosales/Documentos/trabajo/tesis/vendor/laravel/framework/src/Illuminate/Foundation/Auth/AuthenticatesUsers.php",
+		"/opt/lampp/etc/httpd.conf",
+		"/opt/lampp/etc/httpd.conf.bak",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/app.routing.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/app.module.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/app.component.html",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/coches/coches.component.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/services/peticiones.service.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/coches/coche.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/coches/coches.component.html",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/services/ropa.service.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/home/home.component.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/home/home.component.html",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/pipes/conversor.pipe.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/contacto/contacto.component.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/contacto/contacto.component.html",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/empleado/empleado.component.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/empleado/empleado.component.html",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/assets/styles.css",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/index.html",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/empleado/empleado.ts",
+		"/home/erosales/.config/sublime-text-3/Packages/DocBlockr/README.md",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/fruta/fruta.component.ts",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/fruta/fruta.component.html",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/app.component.css",
+		"/home/erosales/Documentos/trabajo/curso-angular4/src/app/app.component.ts",
+		"/home/erosales/Documentos/trabajo/sispes/.env",
+		"/home/erosales/Documentos/trabajo/sispes/composer.json",
+		"/home/erosales/MEGAsync Downloads/KMSAC1.4.9/KMSAC1.4.9/importante.txt",
+		"/home/erosales/Documentos/trabajo/SPAL/.env",
+		"/home/erosales/Documentos/trabajo/sispes/resources/views/admin/asignaturas_listar.blade.php",
+		"/home/erosales/Documentos/trabajo/sispes/resources/views/layouts/admin.blade.php",
+		"/home/erosales/Documentos/trabajo/sispes/resources/views/auth/login.blade.php",
+		"/home/erosales/Documentos/trabajo/sispes/app/Http/routes.php",
+		"/home/erosales/Documentos/trabajo/sispes/app/Http/Kernel.php",
+		"/home/erosales/Documentos/trabajo/sispes/.htaccess",
+		"/home/erosales/Documentos/trabajo/sispes/resources/views/welcome.blade.php",
+		"/home/erosales/Documentos/trabajo/sispes/app/Http/Controllers/Auth/AuthController.php",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/3aPar/tareas/Yoshio/Ejercicios/Brujula/www/js/compass.js",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/3aPar/tareas/Yoshio/Ejercicios/Vibracion/www/js/vibracion.js",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/3aPar/tareas/Yoshio/Ejercicios/Vibracion/www/index.html",
+		"/home/erosales/Documentos/trabajo/sispes/config/database.php",
+		"/home/erosales/Documentos/trabajo/sispes/database/migrations/2017_03_08_074520_create_programa_table.php",
+		"/home/erosales/Documentos/trabajo/sispes/database/migrations/2017_03_08_111711_create_aXXXX_table.php",
+		"/home/erosales/Documentos/ejercicioscordova/notas/plugins/cordova-plugin-file/www/browser/FileSystem.js",
+		"/home/erosales/Documentos/ejercicioscordova/notas/www/js/notas.js",
+		"/home/erosales/Documentos/ejercicioscordova/camara/www/index.html",
+		"/home/erosales/Documentos/ejercicioscordova/camara/www/css/camara.css",
+		"/home/erosales/Documentos/ejercicioscordova/camara/www/js/camara.js",
+		"/home/erosales/.config/sublime-text-3/Packages/User/Package Control.sublime-settings",
+		"/home/erosales/.config/sublime-text-3/Packages/User/Base File.sublime-settings",
+		"/home/erosales/.config/sublime-text-3/Packages/DocBlockr/Base File.sublime-settings",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/ejercicios/gestures/www/css/gestures.css",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Evaluacion/aguilar/Examen1/connect.php",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Evaluacion/aguilar/Examen1/index.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Evaluacion/Alcantar/evaluacion/index.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Evaluacion/Alcantar/evaluacion/cargarpaises.php",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/ejercicios/EjerciciosAjaxDOM/Ejercicio12DOMbasicoyatributosXHTML.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Tareas/Padilla/14.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Tareas/Yochio/Ejercicio4.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Tareas/Guillen/formulario.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Tareas/Flores/Practica_14.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Tareas/Caballero/Ejercicio11DOMbasico.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Tareas/Vicente/Ejercicio11DOMbasico.HTML",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/ejercicios/EjerciciosAjaxDOM/Ejercicio11DOMbasico.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/2016/1aPar/Tareas/Yochio/prueba.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/ejercicios/EjerciciosAjaxDOM/Ejercicio13DOMbasicoyatributosXHTML.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/ejercicios/XML/dtd/DTDbasico_02_XML.xml",
+		"/home/erosales/MEGAsync/trabajo/SISEUCol/Otros/BD/SICEUC/EGRESADOS-LAE-CP.html",
+		"/home/erosales/MEGAsync/Documentos/UTEM/Tecnologias_Informacion/Desarrollo_de_aplicaciones_III/ejercicios/XMLHttpRequest/holamundo.txt",
+		"/media/erosales/MestriaERB/ED/pilas01.cpp",
+		"/media/erosales/MestriaERB/ED/pilas02.cpp",
+		"/media/erosales/MestriaERB/ED/BUSQUE.CPP",
+		"/opt/lampp/etc/php.ini",
+		"/etc/php/7.0/cli/php.ini",
+		"/etc/php/7.0/cli/conf.d/20-phar.ini",
+		"/etc/php/7.0/cli/conf.d/20-exif.ini",
+		"/etc/php/7.0/cli/conf.d/20-tokenizer.ini"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"coches",
+			"Coches",
+			"coche",
+			"potencia",
+			"nombre",
+			"reuired",
+			"nombre",
+			"prenda_a_gurdar",
+			"]\">",
+			"empleado",
+			"fruta",
+			"}",
+			"Home",
+			"home",
+			"EmpleadoComponete",
+			"empleado",
+			"'];\n",
+			"wifi",
+			"File",
+			"file",
+			"File",
+			"file",
+			"File",
+			"file",
+			"cordova",
+			"cordova.file",
+			"miMapa",
+			"\"></",
+			"ctrl",
+			"webkit",
+			"hammerTime",
+			"name=\"column\"",
+			"/table",
+			"column name=\"",
+			"table name=\"des\"",
+			"name",
+			"\".\"",
+			"variable",
+			"select=\"column\"",
+			"value-of",
+			"$mysqli"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app/Http/Controllers/AcademicoController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3332,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 324.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "resources/views/academico/ua.blade.php",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 8177,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 389.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 42.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.doc":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "tesis.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 304.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

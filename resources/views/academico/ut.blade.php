@@ -1,8 +1,8 @@
 @extends('layouts.academico')
 
 @section('estilos')
-{{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}    
-{{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css') }}	
+{{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}
+{{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css') }}
 @endsection
 
 @section('content')
@@ -23,7 +23,7 @@
                                 @endif
                                 </button>
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>                                    
+                                    <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
                                     @foreach($g as $gene)
@@ -33,7 +33,7 @@
                                     <li><a href="{{ url('/usuariosTesistas') }}">Todas las generaciones</a></li>
 
                                 </ul>
-                            </div>            
+                            </div>
 
 
                 		</div>
@@ -42,7 +42,7 @@
                 		      <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#nuevousuario">Nuevo <i class="fa fa-btn fa-user-plus"></i></button>
                             @endif
                 		</div>
-                	</div>                	
+                	</div>
                 </div>
                 <div class="panel-body">
 					<table class="table table-striped" id="tua">
@@ -63,10 +63,10 @@
                                     foreach($rol as $roles){
                                         $rolvalido = $rolvalido || ($usuario->idprograma == $roles['idprograma'] && $roles['rol'] <= 5);
                                     }
-                                @endphp                            
+                                @endphp
 								<tr>
 									<td>{{ $usuario->nocontrol }}</td>
-                                    <td>{{ $usuario->nombre }}</td>									
+                                    <td>{{ $usuario->nombre }}</td>
                                     <td>
                                         @if((Auth::user()->priv<=3 && $rolvalido) || Auth::user()->priv == 1)
                                             @if(!is_null($usuario->idprograma))
@@ -85,14 +85,14 @@
                                                     if($carr->id == $usuario->idprograma){
                                                         echo $carr->abrev;
                                                         $x = true;
-                                                    }                                                
+                                                    }
                                                 }
                                                 if(!$x){
                                                     echo 'ND';
                                                 }
                                             @endphp
                                         @endif
-                                    </td>                                    
+                                    </td>
                                     <td>
                                         @if((Auth::user()->priv<=3 && $rolvalido) || Auth::user()->priv == 1)
                                             @if(!is_null($usuario->idprograma))
@@ -112,23 +112,27 @@
                                                 {{ $usuario->gen }}
                                             @else
                                                 ND
-                                            @endif                                        
+                                            @endif
                                         @endif
-                                    </td>                                    
+                                    </td>
 									<td>
                                         @if(Auth::user()->priv <= 3 )
-                                            <div class="btn-group" rol="group">                                                
+                                            <div class="btn-group" rol="group">
                                                 <a href="{{ url('/usuarioEditar/'.$usuario->id) }}" class="btn btn-info btn-sm"><i class="fa  fa-pencil"></i></a>
-                                                <a href="#" class="btn btn-info btn-sm dt {{ $usuario->idtesis==''?'disabled':'' }}" data-idtesis="{{ $usuario->idtesis }}"  data-nombre="{{ $usuario->nombre }}"><i class="fa fa-file-text"></i></a> 
+                                                <a href="#" class="btn btn-info btn-sm dt {{ $usuario->idtesis==''?'disabled':'' }}" data-idtesis="{{ $usuario->idtesis }}"  data-nombre="{{ $usuario->nombre }}"><i class="fa fa-file-text"></i></a>
 
                                                 @if($rolvalido || Auth::user()->priv == 1)
                                                     <a href="#" class="btn btn-danger btn-sm eliminar" data-nombre="{{ $usuario->nombre }}" data-id="{{ $usuario->id }}:{{ $usuario->priv }}" ><i class="fa fa-trash"></i></a>
-                                                @endif                                                
-                                            </div>                                       
+                                                @endif
+                                            </div>
                                         @else
-								            <div class="btn-group" rol="group">                                                
-                                                <a href="#" class="btn btn-info btn-sm dt" data-idtesis="{{ $usuario->idtesis }}" data-nombre="{{ $usuario->nombre }}"><i class="fa fa-file-text"></i></a>
-                                            </div>                                                                               
+								            <div class="btn-group" rol="group">
+                                                @if($usuario->idtesis != '')
+                                                    <a href="#" class="btn btn-info btn-sm dt" data-idtesis="{{ $usuario->idtesis }}" data-nombre="{{ $usuario->nombre }}"><i class="far fa-file-alt"></i></a>
+                                                @else
+                                                    <a href="#" class="btn btn-info btn-sm disabled"><i class="far fa-file-alt"></i></a>
+                                                @endif
+                                            </div>
                                         @endif
 									</td>
 								</tr>
@@ -145,7 +149,7 @@
                                 <ul>
                                 @foreach ($errores->all() as $e)
                                     <li>{{ $e }}</li>
-                                @endforeach                                    
+                                @endforeach
                                 </ul>
                                 <button class="btn btn-link" data-toggle="modal" data-target="#nuevousuario">Corregir</button>
                             </div>
@@ -170,37 +174,37 @@
                     <h4 class="modal-title">Registrar usuario</h4>
                 </div>
                 <div class="modal-body">
-                    
+
                   <div class="form-group{{ isset($errores)?($errores->has('nombre') ? ' has-error' : ''):'' }}">
                     <label for="nombre" class="col-sm-4 control-label">Nombre completo</label>
                     <div class="col-sm-8">
                       <input type="text" class="form-control" id="nombre" name="nombre" required="required" autofocus="autofocus" value="{{ isset($request)?$request->nombre:'' }}">
                     </div>
-                  </div>                    
+                  </div>
                   <div class="form-group{{ isset($errores)?($errores->has('nocontrol') ? ' has-error' : ''):''  }}">
                     <label for="nocontrol" class="col-sm-4 control-label">Número de cuenta</label>
                     <div class="col-sm-8">
                       <input type="text" class="form-control" id="nocontrol" name="nocontrol" required="required" maxlength="8" value="{{ isset($request)?$request->nocontrol:'' }}">
                     </div>
-                  </div>                    
+                  </div>
                   <div class="form-group{{ isset($errores)?($errores->has('email') ? ' has-error' : ''):'' }}">
                     <label for="email" class="col-sm-4 control-label">Correo electrónico</label>
                     <div class="col-sm-8">
                       <input type="email" class="form-control" id="email" name="email" required="required" value="{{ isset($request)?$request->email:'' }}" placeholder="Debe ser institucional (@ucol.mx)">
                     </div>
-                  </div>                    
+                  </div>
                   <div class="form-group{{ isset($errores)?($errores->has('password') ? ' has-error' : ''):'' }}">
                     <label for="password" class="col-sm-4 control-label">Contraseña</label>
                     <div class="col-sm-8">
                       <input type="text" class="form-control" id="password" name="password" required="required">
                     </div>
                   </div>
-           
+
                       <div class="form-group{{ isset($errores)?($errores->has('priv') ? ' has-error' : ''):'' }}">
                         <label for="password" class="col-sm-4 control-label">Tipo usuario</label>
                         <div class="col-sm-8">
                             <label>Tesista</label>
-                            <input type="hidden" name="priv" value="5">                                
+                            <input type="hidden" name="priv" value="5">
                         </div>
                       </div>
 
@@ -209,7 +213,7 @@
                     <div class="btn-group" rol="group">
                         <button type="button" class="btn btn-danger cancelar" data-dismiss="modal">Cancelar <i class="fa fa-btn fa-close"></i></button>
                         <button type="submit" class="btn btn-success">Guardar <i class="fa fa-btn fa-check"></i></button>
-                    </div>                    
+                    </div>
                 </div>
             </form>
         </div><!-- /.modal-content -->
@@ -259,8 +263,8 @@
 
 @section('scripts')
 {{ Html::script('/public/assets/vendor/datatables/media/js/jquery.dataTables.min.js') }}
-{{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }} 
-{{ Html::script('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js') }}	
+{{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }}
+{{ Html::script('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js') }}
 
 <script type="text/javascript">
 
@@ -271,7 +275,7 @@
         $.fn.editable.defaults.params = function(params){
             params._token = $('meta[name="csrf-token"]').attr("content");
             return params;
-        };        
+        };
         $(".carrera").editable({
             type: 'select',
             source: [
@@ -279,7 +283,7 @@
                         {
                         'value': {{ $carr->id }}, 'text': '{{ $carr->abrev }}'
                         },
-                    @endforeach                
+                    @endforeach
                     ],
             name: 'idprograma',
             emptytext: 'ND',
@@ -296,7 +300,7 @@
             url: '{{ route('asignaGen') }}',
             title: 'Asignar generación'
         });
-       
+
 
         $('#tua').DataTable({
             "scrollY": 480,
@@ -311,7 +315,7 @@
             "emptyTable" : "No hay datos para mostrar",
             "columnDefs": [
                 { "orderable": false, "targets": 4 }
-            ],             
+            ],
         });
 
         $('.cancelar').click(function(){
@@ -339,15 +343,15 @@
                             _token:$('meta[name="csrf-token"]').attr("content")
                         }
                     );
-            
+
             r.done(function(resp){
                 console.log(resp);
                 $('.dtitulo').html('<strong>'+resp['tesis'][0].nom+'</strong>');
                 $('.ddescripcion').html('<strong>'+resp['tesis'][0].desc+'</strong>');
                 $('.dasesor').html('<strong>'+resp['asesor'][0].nombre+'</strong>');
                 $('.destado').html('<strong>'+['','','','Asignada','Concluida'][resp['tesis'][0].estado]+'</strong>');
-                
-            });  
+
+            });
 
             $('#detalletesista').modal('toggle');
 

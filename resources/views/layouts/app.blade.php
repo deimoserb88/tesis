@@ -9,10 +9,10 @@
     <title>{{ config('app.name', 'Tesis') }}</title>
     <link type="image/x-icon" href="http://www.ucol.mx/cms/img/favicon.ico" rel="icon" />
     <!-- Styles -->
-    {{ Html::style('public/assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}  
+    {{ Html::style('public/assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}
     {{ Html::style('https://fonts.googleapis.com/css?family=Lato:100,300,400,700') }}<!-- Fonts -->
-    {{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css') }}<!-- Iconos -->       
-    {{ Html::style('https://file.myfontastic.com/YkvRruhw4K6cVhm9Z6RdGC/icons.css') }}<!-- Iconos -->   
+    {{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css') }}<!-- Iconos -->
+    {{ Html::style('https://file.myfontastic.com/YkvRruhw4K6cVhm9Z6RdGC/icons.css') }}<!-- Iconos -->
     {{ Html::style('http://www.ucol.mx/cms/headerfooterapp.css') }}  {{-- CSS de la universidad --}}
 
     @yield('estilos') <!--Para agregar estilos propios de cada modulo-->
@@ -39,7 +39,7 @@
             margin-left: 6px;
         }
     </style>
-    
+
 </head>
 <body id="app-layout"  data-spy="scroll" data-target=".navbar" data-offset="50">
 <div id="estructura">
@@ -80,10 +80,10 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ explode(" ",Auth::user()->nombre)[0]." (".Auth::user()->priv.")"  }} <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu" role="menu">                            
+                        <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                        Cerrar sesión <i class="far fa-sign-out-alt"></i>
+                                        Cerrar sesión <i class="fas fa-sign-out-alt"></i>
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         {{ csrf_field() }}
@@ -120,8 +120,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 text-center">
-                        &copy; Derechos Reservados 2013-2017 Universidad de Colima
-                </div>                        
+                        &copy; Derechos Reservados 2013-2018 Universidad de Colima
+                </div>
             </div>
         </div>
     </div>
@@ -131,8 +131,9 @@
     {{ Html::script('/public/assets/vendor/jquery/dist/jquery.min.js') }}
     {{ Html::script('/public/assets/vendor/bootstrap/dist/js/bootstrap.min.js') }}
     {{ Html::script('/public/js/typeahead.bundle.js') }}
+    {{ Html::script('https://use.fontawesome.com/releases/v5.0.1/js/all.js') }}
 
-    @yield('scripts'){{--Para scripts propios del módulo--}}    
+    @yield('scripts'){{--Para scripts propios del módulo--}}
 
 </body>
 </html>

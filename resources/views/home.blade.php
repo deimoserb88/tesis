@@ -11,7 +11,7 @@
                 <div class="panel-body">
 
                     @if($tu == 'a' || ($tu == 't' && count($t) > 0))
-                        Estimado usuario 
+                        Estimado usuario
                         @if($tu == 'a')
                             académico,
                         @else
@@ -22,12 +22,12 @@
                         @if($tu == 'a')
                             coordinador o al presidente de academia de la carrera en la que participa como docente asesor, coasesor,
                             revisor o titular de Seminario de Investigación. En caso de ser coordinador de carrera o presidente de academia
-                            solicite su Rol al dirctor o al coordinador académico de la facultad.                        
+                            solicite su Rol al director o al coordinador académico de la facultad.
                         @else
                             profesor titular de Seminario de Investigación.
-                        @endif                    
+                        @endif
                         <br><br>
-                        <table class="table table-hover">                        
+                        <table class="table table-hover">
                         @foreach($u as $usuario)
                             <tr>
                                 <td>{{ $usuario->nombre }}</td>
@@ -39,11 +39,15 @@
                                 @endif
                                 <td>
                                     <div class="btn-group" rol="group">
-                                        <a href="#" class="btn btn-warning btn-sm em" data-usuario="{{ $usuario->nombre }}" data-idusuario="{{ $usuario->id }}" data-toggle="modal" data-target="#emensaje"><i class="fa fa-commenting" ></i></a>
-                                        <a href="mailto:{{ $usuario->email }}" class="btn btn-warning btn-sm"><i class="fa fa-envelope"></i></a>
+                                        <a href="#" class="btn btn-warning btn-sm em" data-usuario="{{ $usuario->nombre }}" data-idusuario="{{ $usuario->id }}" data-toggle="modal" data-target="#emensaje"><i class="far fa-comment" ></i></a>
+                                        <a href="#" data-email="{{ $usuario->email }}" class="btn btn-success btn-sm email">
+                                            <i class="fas fa-envelope"></i>
+                                            <i class="fas fa-long-arrow-alt-right"></i>
+                                            <i class="fas fa-clipboard"></i>
+                                        </a>
                                     </div>
                                 </td>
-                            </tr>                            
+                            </tr>
                         @endforeach
                         </table>
                     @else
@@ -68,7 +72,7 @@
                                 <input type="number" min="{{ date('Y') }}" max="{{ date("Y") + 5 }}" value="{{ date('Y') }}" class="form-control" name="gen" id="gen" required="required">
                             </div>
                             <div class="col-sm-8"></div>
-                        </div>                        
+                        </div>
                         {{ Form::close() }}
                     @endif
                 </div>
@@ -82,7 +86,7 @@
                     </div>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             {{ csrf_field() }}
-                        </form>            
+                        </form>
                 </div>
             </div>
         </div>
@@ -91,7 +95,7 @@
 
 <div class="modal fade" tabindex="-1" role="dialog" id="emensaje">
   <div class="modal-dialog" role="document">
-          
+
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -101,9 +105,9 @@
             <textarea name="mensaje" class="form-control" id="mensaje" cols="70" rows="5"></textarea>
           </div>
           <div class="modal-footer">
-            <div class="btn-group" rol="group">            
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar <i class="fa fa-close"></i></button>
-                <button type="button" class="btn btn-success" id="idusuario" value="">Enviar <i class="fa fa-send-o"></i> </button>
+            <div class="btn-group" rol="group">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar <i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-success" id="idusuario" value="">Enviar <i class="fab fa-telegram-plane"></i> </button>
             </div>
           </div>
         </div><!-- /.modal-content -->
@@ -135,23 +139,29 @@
                         }
                     );
             em.done(function(resp){
-                alert('Mensaje enviado');                
+                alert('Mensaje enviado');
             });
             em.always(function(resp){
-                //console.log(resp);                
+                //console.log(resp);
             });
-            $('#emensaje').modal('hide');            
+            $('#emensaje').modal('hide');
         });
 
         $('.guardar').click(function(){
             $('.tesistaProGen').trigger('submit');
         });
 
-
+        $('.email').click(function(){
+            var email = $(this).data('email');
+            var temp = $("<input>")
+            $("body").append(temp);
+            temp.val(email).select();
+            document.execCommand("copy");
+            temp.remove();
+            alert('La dirección de correo electrónico ha sido copiada al portapapeles,\nvaya a su gestor de correo electrónico y péguela en la dirección\ndel destinatario')
+        });
     });
-                
 
-            
 </script>
 
 @endsection

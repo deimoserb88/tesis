@@ -1,7 +1,7 @@
 @extends('layouts.academico')
 
 @section('estilos')
-{{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}	
+{{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}
 @endsection
 
 @section('content')
@@ -14,28 +14,28 @@
                 		<div class="col-md-12">
                 			<h4 style="display: inline;">Tesis: <span class="label label-warning"> {{ $t[0]->nom }}, {{ $t[0]->abrev }}</span> </h4>
                 		</div>
-                	</div>                	
+                	</div>
                 </div>
                 <div class="panel-body">
                     <div class="alert alert-info">
-                    <div class="row">                        
+                    <div class="row">
                         <div class="col-sm-2">Tesistas:</div>
                         <div class="col-sm-10 text-right">
                             @if(count($ta) < $t[0]->tesistas)
-                                @if(Auth::user()->priv == 2 || Auth::user()->priv == 3)
+                                @if(in_array(Auth::user()->priv,[2,3]) || array_intersect([3,4,5], array_column($urol,'rol')))
                                 <button class="btn btn-default btn-xs"  data-toggle="modal" data-target="#asignatesis">Asignar <i class="fas fa-plus"></i> </button>
                                 @endif
                             @else
                                 Esta tesis ya tiene el número de tesistas asignados por el asesor: <span class="label label-danger"> {{ $t[0]->tesistas }}</span>
                             @endif
-                        </div>                        
+                        </div>
                     </div>
                     </div>
 					<table class="table table-striped">{{--  id="tua" --}}
 						<thead>
 							<tr>
 								<th>No. Cta.</th>
-								<th>Nombre</th>                                
+								<th>Nombre</th>
 								<th class="text-center"><i class="fas fa-cog"></i></th>
 							</tr>
 						</thead>
@@ -43,7 +43,7 @@
 							@foreach($ta as $tesista)
 								<tr>
 									<td>{{ $tesista->nocontrol }}</td>
-                                    <td>{{ $tesista->nombre }}</td>									
+                                    <td>{{ $tesista->nombre }}</td>
 									<td class="text-center">&nbsp;</td>
 								</tr>
 							@endforeach
@@ -72,7 +72,7 @@
                 <button type="button" class="close cancelar" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Seleccione un tesista</h4>
             </div>
-            <div class="modal-body">                                      
+            <div class="modal-body">
                 <table class="table table-striped table-hover" id="ttesistas">
                     <thead>
                         <tr>
@@ -98,9 +98,9 @@
             <div class="modal-footer">
                 <div class="btn-group" rol="group">
                     <button type="button" class="btn btn-danger cancelar" data-dismiss="modal">Cancelar <i class="fas fa-times"></i></button>
-                    
-                </div>                    
-            </div>            
+
+                </div>
+            </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -111,7 +111,7 @@
 
 @section('scripts')
 {{ Html::script('/public/assets/vendor/datatables/media/js/jquery.dataTables.min.js') }}
-{{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }}	
+{{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }}
 
 <script type="text/javascript">
 
@@ -130,7 +130,7 @@
             "emptyTable" : "No hay datos para mostrar",
             "columnDefs": [
                 { "orderable": false, "targets": 2 }
-            ],             
+            ],
         });
 
 
@@ -144,7 +144,7 @@
                 "zeroRecords": "No se encontraron registros que coincidan",
             },
             "select": true,
-            "emptyTable" : "No hay datos para mostrar",                        
+            "emptyTable" : "No hay datos para mostrar",
         });
 
 

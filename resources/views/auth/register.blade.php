@@ -103,3 +103,16 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#nocontrol').blur(function(){
+            var nc = $(this).val();
+            if(nc.length != 4 && nc.length != 8){
+                alert("El número de trabajador debe ser de 4 digitos y el número de cuenta del estudiante debe ser de 8 dígitos.\n Usted está introduciendo " + nc.length);
+            }
+        });
+    });
+</script>
+@endsection

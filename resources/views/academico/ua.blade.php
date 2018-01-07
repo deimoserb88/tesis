@@ -1,7 +1,7 @@
 @extends('layouts.academico')
 
 @section('estilos')
-{{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}	
+{{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}
 @endsection
 
 @section('content')
@@ -12,21 +12,21 @@
                 <div class="panel-heading">
                 	<div class="row">
                 		<div class="col-md-9">
-                			<h4 style="display: inline;">Usuarios </h4>                            
+                			<h4 style="display: inline;">Usuarios </h4>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default">{{ tipoUsuario($tipo_usuario) }}s</button>
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>                                    
+                                    <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
                                 @if(Auth::user()->priv<3)
                                     <li><a href="{{ url('/usuariosAcademicos') }}">Ver académicos</a></li>
                                 @endif
-                                @if(Auth::user()->priv<=3)                                    
+                                @if(Auth::user()->priv<=3)
                                     <li><a href="{{ url('/usuariosNuevos') }}">Ver nuevos</a></li>
                                 @endif
                                 </ul>
-                            </div>            
+                            </div>
 
 
                 		</div>
@@ -35,7 +35,7 @@
                 		      <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#nuevousuario">Nuevo <i class="fa fa-btn fa-user-plus"></i></button>
                             @endif
                 		</div>
-                	</div>                	
+                	</div>
                 </div>
                 <div class="panel-body">
 					<table class="table table-striped" id="tua">
@@ -53,8 +53,8 @@
 									<td>{{ $ua->nombre }}</td>
 									<td class="text-center">
                                         @if(Auth::user()->priv <=3 )
-								            <div class="btn-group" rol="group">                                                
-                                                <a href="{{ url('/usuarioEditar/'.$ua->id) }}" class="btn btn-info btn-sm"><i class="fa  fa-pencil"></i></a>
+								            <div class="btn-group" rol="group">
+                                                <a href="{{ url('/usuarioEditar/'.$ua->id) }}" class="btn btn-info btn-sm"><i class="fas  fa-pencil-alt"></i></a>
                                                 @if(strlen($ua->nocontrol)<=4)
                                                     <a href="{{ url('/usuarioRoles/'.$ua->id) }}" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="left" title="Definir roles"><i class="fa  fa-cogs"></i></a>
                                                 @endif
@@ -62,8 +62,8 @@
                                                     <a href="{{ url('/usuarioTesis/'.$ua->id.'/T') }}" class="btn btn-info btn-sm"  data-toggle="tooltip" data-placement="left" title="Asignar tesis"><i class="fa  fa-bookmark"></i></a>
                                                 @endif
                                                 <a href="#" class="btn btn-danger btn-sm eliminar" data-nombre="{{ $ua->nombre }}" data-id="{{ $ua->id }}:{{ $ua->priv }}" ><i class="fa fa-trash"></i></a>
-                                            
-                                            </div>                                       
+
+                                            </div>
                                         @endif
 									</td>
 								</tr>
@@ -80,7 +80,7 @@
                                 <ul>
                                 @foreach ($errores->all() as $e)
                                     <li>{{ $e }}</li>
-                                @endforeach                                    
+                                @endforeach
                                 </ul>
                                 <button class="btn btn-link" data-toggle="modal" data-target="#nuevousuario">Corregir</button>
                             </div>
@@ -104,32 +104,32 @@
                     <h4 class="modal-title">Registrar usuario</h4>
                 </div>
                 <div class="modal-body">
-                    
+
                   <div class="form-group{{ isset($errores)?($errores->has('nombre') ? ' has-error' : ''):'' }}">
                     <label for="nombre" class="col-sm-4 control-label">Nombre completo</label>
                     <div class="col-sm-8">
                       <input type="text" class="form-control" id="nombre" name="nombre" required="required" autofocus="autofocus" value="{{ isset($request)?$request->nombre:'' }}">
                     </div>
-                  </div>                    
+                  </div>
                   <div class="form-group{{ isset($errores)?($errores->has('nocontrol') ? ' has-error' : ''):''  }}">
                     <label for="nocontrol" class="col-sm-4 control-label">Número de {{ $tipo_usuario<5?'trabajador':'cuenta' }}</label>
                     <div class="col-sm-8">
                       <input type="text" class="form-control" id="nocontrol" name="nocontrol" required="required" maxlength="8" value="{{ isset($request)?$request->nocontrol:'' }}">
                     </div>
-                  </div>                    
+                  </div>
                   <div class="form-group{{ isset($errores)?($errores->has('email') ? ' has-error' : ''):'' }}">
                     <label for="email" class="col-sm-4 control-label">Correo electrónico</label>
                     <div class="col-sm-8">
                       <input type="email" class="form-control" id="email" name="email" required="required" value="{{ isset($request)?$request->email:'' }}" placeholder="Debe ser institucional (@ucol.mx)">
                     </div>
-                  </div>                    
+                  </div>
                   <div class="form-group{{ isset($errores)?($errores->has('password') ? ' has-error' : ''):'' }}">
                     <label for="password" class="col-sm-4 control-label">Contraseña</label>
                     <div class="col-sm-8">
                       <input type="text" class="form-control" id="password" name="password" required="required">
                     </div>
                   </div>
-           
+
                       <div class="form-group{{ isset($errores)?($errores->has('priv') ? ' has-error' : ''):'' }}">
                         <label for="password" class="col-sm-4 control-label">Tipo usuario</label>
                         <div class="col-sm-8">
@@ -141,31 +141,31 @@
                             </select>
                             @else
                                 <label>{{ tipoUsuario($tipo_usuario) }}</label>
-                                <input type="hidden" name="priv" value="{{ $tipo_usuario }}">    
+                                <input type="hidden" name="priv" value="{{ $tipo_usuario }}">
                             @endif
                         </div>
                       </div>
                       <div class="form-group hidden genprog">
                         <label for="carr" class="col-sm-4 control-label">Programa</label>
                         <div class="col-sm-8">
-                            <select name="carr" class="form-control" id="carr"> 
+                            <select name="carr" class="form-control" id="carr">
                                 @foreach($p as $prog)
                                     <option value="{{ $prog->id }}">{{ $prog->programa }}</option>
                                 @endforeach
                             </select>
-                        </div>                        
-                      </div>  
+                        </div>
+                      </div>
                       <div class="form-group hidden genprog">
                         <label for="gen" class="col-sm-4 control-label">Generación</label>
                         <div class="col-sm-3">
-                            <select name="gen" class="form-control" id="gen">                            
-                                    <option value="{{ date("Y") }}">{{ date("Y") }}</option>                            
-                                    <option value="{{ date("Y")+1 }}">{{ date("Y")+1 }}</option>                            
-                                    <option value="{{ date("Y")+2 }}">{{ date("Y")+2 }}</option>                            
+                            <select name="gen" class="form-control" id="gen">
+                                    <option value="{{ date("Y") }}">{{ date("Y") }}</option>
+                                    <option value="{{ date("Y")+1 }}">{{ date("Y")+1 }}</option>
+                                    <option value="{{ date("Y")+2 }}">{{ date("Y")+2 }}</option>
                             </select>
                         </div>
                         <div class="col-md-5">&nbsp;</div>
-                      </div>                      
+                      </div>
 
 
                 </div>
@@ -173,7 +173,7 @@
                     <div class="btn-group" rol="group">
                         <button type="button" class="btn btn-danger cancelar" data-dismiss="modal">Cancelar <i class="fa fa-btn fa-close"></i></button>
                         <button type="submit" class="btn btn-success">Guardar <i class="fa fa-btn fa-check"></i></button>
-                    </div>                    
+                    </div>
                 </div>
             </form>
         </div><!-- /.modal-content -->
@@ -186,7 +186,7 @@
 
 @section('scripts')
 {{ Html::script('/public/assets/vendor/datatables/media/js/jquery.dataTables.min.js') }}
-{{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }}	
+{{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }}
 
 <script type="text/javascript">
 
@@ -205,7 +205,7 @@
             "emptyTable" : "No hay datos para mostrar",
             "columnDefs": [
                 { "orderable": false, "targets": 2 }
-            ],             
+            ],
         });
 
         $('.cancelar').click(function(){

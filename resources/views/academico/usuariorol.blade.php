@@ -1,7 +1,7 @@
 @extends('layouts.academico')
 
 @section('estilos')
-{{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}	
+{{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}
 @endsection
 
 @section('content')
@@ -14,17 +14,17 @@
                 		<div class="col-md-12">
                 			<h4 style="display: inline;">Actividad del usuario: <span class="label label-warning">{{ $u[0]->nombre }}, {{ $u[0]->nocontrol }}</span> </h4>
                 		</div>
-                	</div>                	
+                	</div>
                 </div>
-                <div class="panel-body">                    
+                <div class="panel-body">
                     <div class="alert alert-info">
-                    <div class="row">                        
+                    <div class="row">
                         <div class="col-sm-8">Roles:</div>
                         <div class="col-sm-4 text-right">
                             @if(Auth::user()->priv <= 2)
                             <button class="btn btn-default btn-xs"  data-toggle="modal" data-target="#asignarrol">Asignar <i class="fa fa-btn fa-plus"></i> </button>
                             @endif
-                        </div>                        
+                        </div>
                     </div>
                     </div>
                     <table class="table table-striped" id="tua">
@@ -41,10 +41,11 @@
                                     <td>{{ tesis\Rol::rol($rol->rol) }}</td>
                                     <td>{{ $rol->programa }}</td>
                                     <td class="text-center">
-                                        @if(Auth::user()->priv <=3 )
-                                            <div class="btn-group" rol="group">                                                
-                                                <a href="{{ url('quitarRol/'.$rol->id.'/'.$u[0]->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></a>
-                                            </div>                                       
+                                        {{--Los que tiene privilegios 1 pueden eliminar cualquier rol, los demas (2 o 3) solo los roles de su programa--}}
+                                        @if(Auth::user()->priv == 1 || (Auth::user()->priv <= 3 && $rol->idprograma == $p[0]->id))
+                                            <div class="btn-group" rol="group">
+                                                <a href="{{ url('quitarRol/'.$rol->id.'/'.$u[0]->id) }}" class="btn btn-danger btn-xs"><i class="far fa-trash-alt"></i></a>
+                                            </div>
                                         @endif
                                    </td>
                                 </tr>
@@ -74,10 +75,10 @@
                     <h4 class="modal-title">Asignar rol</h4>
                 </div>
                 <div class="modal-body">
-                                      
+
                   <div class="form-group{{ isset($errores)?($errores->has('prog') ? ' has-error' : ''):'' }}">
                     <label for="password" class="col-sm-4 control-label">Programa</label>
-                    <div class="col-sm-8">                            
+                    <div class="col-sm-8">
                         <select name="prog" class="form-control" id="rprog" required="required">
                             @if(Auth::user()->priv == 1)
                                 @foreach($p as $prog)
@@ -88,20 +89,20 @@
                             @endif
                         </select>
                     </div>
-                  </div>                                      
+                  </div>
                   <div class="form-group{{ isset($errores)?($errores->has('rol') ? ' has-error' : ''):'' }}">
                     <label for="password" class="col-sm-4 control-label">Rol</label>
-                    <div class="col-sm-8">                            
+                    <div class="col-sm-8">
                         <select name="rol" class="form-control" id="rol" required="required">
                             @foreach(range($urol[0]['rol'] + 1,9) as $i)
                                 <option value="{{ $i }}">{{ tesis\Rol::rol($i) }}</option>
-                            @endforeach                            
+                            @endforeach
                         </select>
                     </div>
                   </div>
                   <div class="form-group hidden dgen {{ isset($errores)?($errores->has('gen') ? ' has-error' : ''):'' }}">
                     <label for="password" class="col-sm-4 control-label">Generación</label>
-                    <div class="col-sm-8">                            
+                    <div class="col-sm-8">
                         {{ Form::number('gen',date('Y')) }}
                     </div>
                   </div>
@@ -109,9 +110,9 @@
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" rol="group">
-                        <button type="button" class="btn btn-danger cancelar" data-dismiss="modal">Cancelar <i class="fa fa-btn fa-close"></i></button>
-                        <button type="submit" class="btn btn-success">Guardar <i class="fa fa-btn fa-check"></i></button>
-                    </div>                    
+                        <button type="button" class="btn btn-danger cancelar" data-dismiss="modal">Cancelar <i class="fas fa-times"></i></button>
+                        <button type="submit" class="btn btn-success">Guardar <i class="fas fa-check"></i></button>
+                    </div>
                 </div>
             </form>
         </div><!-- /.modal-content -->
@@ -125,7 +126,7 @@
 
 @section('scripts')
 {{ Html::script('/public/assets/vendor/datatables/media/js/jquery.dataTables.min.js') }}
-{{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }}	
+{{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }}
 
 <script type="text/javascript">
 
@@ -144,14 +145,14 @@
             "emptyTable" : "No hay datos para mostrar",
             "columnDefs": [
                 { "orderable": false, "targets": 2 }
-            ],             
+            ],
         });
 
 
         $('[data-toggle="tooltip"]').tooltip();
 
         $(function(){ //con esto podemos llamar funciones al momento de que el docuemtno se carga
-            $('#tprog').change();            
+            $('#tprog').change();
         });
 
         $('#tprog,#gen').change(function(){
@@ -171,7 +172,7 @@
                 });
                 if(r === ''){
                    $('#idtesis').html('<option disabled="disabled">No hay tesis para el programa y generación seleccionados</option>');
-                }                
+                }
             });
         });
 
@@ -180,7 +181,7 @@
             if(r.val() === '9'){
                 $('.dgen').removeClass('hidden');
             }else{
-                $('.dgen').addClass('hidden');                
+                $('.dgen').addClass('hidden');
             }
         });
 

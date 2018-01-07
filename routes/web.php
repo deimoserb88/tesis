@@ -36,7 +36,7 @@ Route::get('/usuariosNuevos', 'AcademicoController@usuariosNuevos')->name('usuar
 
 Route::post('/usuarioGuardar/{accion?}/{tipo?}', 'AcademicoController@usuarioGuardar')->name('usuarioGuardar');
 
-/* 
+/*
 idtu-> id y tipo de usuario con formato id:tu, tu se usa para mostrar la lista correspondiente 1~4->academicos, 5->tesistes, 9->nuevos
  */
 Route::get('/usuarioEliminar/{idtu}', 'AcademicoController@usuarioEliminar')->name('usuarioEliminar');
@@ -72,6 +72,13 @@ Route::get('/usuarioTesis/{id}/{d?}', function($id,$d='T'){
 
 //Cuenta del usuario
 Route::get('/usuarioCuenta','AcademicoController@usuarioCuenta')->name('usuarioCuenta');
+Route::post('/usuarioCambiaDato','AcademicoController@usuarioCambiaDato')->name('usuarioCambiaDato');
+Route::post('/usuarioCambiaEmail','AcademicoController@usuarioCambiaEmail')->name('usuarioCambiaEmail');
+Route::post('/contrasenaCambiar','AcademicoController@contrasenaCambiar')->name('contrasenaCambiar');
+
+
+
+//**************************
 
 
 /**
@@ -121,7 +128,7 @@ Route::post('/getTesisId', function(Request $request){
 								->where('gen','=',$request->gen)
 								->where('idprograma','=',$request->prog)
 								->get()->toArray();
-		return response()->json($tesis);				
+		return response()->json($tesis);
 	}else{
 		return [false];
 	}
