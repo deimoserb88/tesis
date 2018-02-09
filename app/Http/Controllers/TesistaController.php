@@ -58,9 +58,11 @@ class TesistaController extends Controller
 
             $request->pdf->move(storage_path('app/public/tesis/'),$nnombre);
 
+
             return view('tesista.tesissubirpdf',compact('t'));
         }
         if(count($errors) > 0){
+            
             return view('tesista.tesissubirpdf',compact('errors','t'));
         }
     }

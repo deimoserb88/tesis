@@ -10,7 +10,7 @@
 		<div class="panel panel-primary" style="width: 75%;margin: 0 auto;">
 			<div class="panel-heading"><h4 class="panel-title">Subir teisis en formato PDF</h4></div>
 			<div class="panel-body">
-				<div class="alert {{ count($errors)>0 ? ' alert-danger' : ' alert-info' }}">
+				<div class="alert {{ count($errors) > 0 ? ' alert-danger' : ' alert-info' }}">
 	                El documento debe ser PDF y no debe tener un tamaño mayor a 10 MB
 	            </div>
 	            <div class="form-group{{ count($errors) > 0 ? ' has-error' : '' }}">
