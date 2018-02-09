@@ -11,20 +11,21 @@
                 <div class="panel-body">
 
                     @if($tu == 'a' || ($tu == 't' && count($t) > 0))
-                        Estimado usuario
+                        Estimado 
                         @if($tu == 'a')
-                            académico,
+                            usuario académico,
                         @else
                             tesista,
                         @endif
-                        para poder hacer uso del sistema de gestion de Tesis es necesario
-                        que tenga un Rol asignado el cual debe solicitar al
+                        para poder hacer uso del sistema de gestion de Tesis es necesario que
                         @if($tu == 'a')
+                            tenga un Rol asignado el cual debe solicitar al
                             coordinador o al presidente de academia de la carrera en la que participa como docente asesor, coasesor,
                             revisor o titular de Seminario de Investigación. En caso de ser coordinador de carrera o presidente de academia
                             solicite su Rol al director o al coordinador académico de la facultad.
                         @else
-                            profesor titular de Seminario de Investigación.
+                            tengas una tesis asignada, solicita la asignación al 
+                            profesor titular de Seminario de Investigación o al presidente de la academia de tu carrera.
                         @endif
                         <br><br>
                         <table class="table table-hover">

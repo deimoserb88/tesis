@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Tesis') }}</title>
-    <link type="image/x-icon" href="http://www.ucol.mx/cms/img/favicon.ico" rel="icon" />
+	<link type="image/x-icon" href="http://www.ucol.mx/cms/img/favicon.ico" rel="icon" />
     <!-- Styles -->
     {{ Html::style('public/assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}
     {{ Html::style('https://fonts.googleapis.com/css?family=Lato:100,300,400,700') }}<!-- Fonts -->
-    {{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css') }}<!-- Iconos -->
-    {{-- {{ Html::style('https://file.myfontastic.com/YkvRruhw4K6cVhm9Z6RdGC/icons.css') }} --}}<!-- Iconos -->
-    {{ Html::style('http://www.ucol.mx/cms/headerfooterapp.css') }}  {{-- CSS de la universidad --}}
+    {{-- Html::style('https://file.myfontastic.com/YkvRruhw4K6cVhm9Z6RdGC/icons.css') --}}<!-- Iconos -->
+    {{ Html::style('http://www.ucol.mx/cms/headerfooterapp.css') }}	 {{-- CSS de la universidad --}}
 
     @yield('estilos') <!--Para agregar estilos propios de cada modulo-->
 
@@ -38,6 +37,10 @@
         .fa-btn {
             margin-left: 6px;
         }
+        .lm {
+            border-radius: 45%;
+        }
+
     </style>
 
 </head>
@@ -50,7 +53,7 @@
                     <a class="escudo" href="http://www.ucol.mx/">&nbsp;</a>
                     <a class="nombre" href="http://www.ucol.mx/">&nbsp;</a>
                 </div>
-                <div class="TituloDep">Facultad de Ingeniería Electromecánica</div>
+            	<div class="TituloDep">Facultad de Ingeniería Electromecánica</div>
             </div><!--encabezdo-->
         </div><!--top-->
     </header>
@@ -73,14 +76,37 @@
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
+{{--                 <ul class="nav navbar-nav">
+                    <li><a href="{{ url('/tesis') }}">Tesis <i class="fas fa-file-alt"></i></a></li>
+                    <li><a href="{{ url('/usuariosTesistas') }}">Tesistas <i class="fas fa-graduation-cap"></i></a></li>
+                    @if(Auth::user()->priv <= 2)
+                        <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios <i class="fas fa-users"></i></a></li>
+                    @endif
+                </ul>
+ --}}
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     @yield('menu_items')
+                    <li>
+                        <a href="{{ url('/mensajes/'.Auth::user()->id.'/2') }}">
+                            @php
+                                $mnl = tesis\Mensaje::where('idusuario_para','=',Auth::user()->id)->where('leido','=','0')->count();
+                            @endphp
+                            @if($mnl>0)
+                                <i class="fas fa-comment text-danger" ></i>
+                                <span class="label label-danger lm">{{ $mnl }}</span>
+                            @else
+                                <i class="fas fa-comment text-muted" ></i>
+                                <span class="label label-default lm">{{ $mnl }}</span>
+                            @endif
+                        </a>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ explode(" ",Auth::user()->nombre)[0]." (".Auth::user()->priv.")"  }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ url('/tesistaHome') }}">Panel de actividades <i class="fas fa-tasks"></i></a></li>
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                         Cerrar sesión <i class="fas fa-sign-out-alt"></i>
@@ -97,9 +123,10 @@
         </div>
     </nav>
 
-        @yield('content')
-    </div>
+@yield('content')
 
+
+</div>
 <footer id="p-footer"><!-- footer -->
     <div class="inner">
         <div class="container-fluid">
@@ -108,7 +135,7 @@
                     <div class="address text-center">
                         <ul>
                             <li><i class="icon-address"></i><strong>Direcci&oacute;n:</strong>
-                                Km 20, carretera Manzanillo - Cihuatlan, ejido El Naranjo, CP. 28868, Manzanillo, Colima, México
+								Km 20, carretera Manzanillo - Cihuatlan, ejido El Naranjo, CP. 28868, Manzanillo, Colima, México
                             </li>
                         </ul>
                     </div>
@@ -120,7 +147,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 text-center">
-                        &copy; Derechos Reservados 2013-2018 Universidad de Colima
+						&copy; Derechos Reservados 2013-2017 Universidad de Colima
                 </div>
             </div>
         </div>
@@ -133,7 +160,7 @@
     {{ Html::script('/public/js/typeahead.bundle.js') }}
     {{ Html::script('https://use.fontawesome.com/releases/v5.0.1/js/all.js') }}
 
-    @yield('scripts'){{--Para scripts propios del módulo--}}
+   	@yield('scripts'){{--Para scripts propios del módulo--}}
 
 </body>
 </html>

@@ -11,7 +11,7 @@
     <!-- Styles -->
     {{ Html::style('public/assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}
     {{ Html::style('https://fonts.googleapis.com/css?family=Lato:100,300,400,700') }}<!-- Fonts -->
-    {{ Html::style('https://file.myfontastic.com/YkvRruhw4K6cVhm9Z6RdGC/icons.css') }}<!-- Iconos -->
+    {{-- Html::style('https://file.myfontastic.com/YkvRruhw4K6cVhm9Z6RdGC/icons.css') --}}<!-- Iconos -->
     {{ Html::style('http://www.ucol.mx/cms/headerfooterapp.css') }}	 {{-- CSS de la universidad --}}
 
     @yield('estilos') <!--Para agregar estilos propios de cada modulo-->
@@ -70,15 +70,17 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/home') }}">
                     TESIS <i class="fas fa-home"></i>
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/tesis') }}">Tesis <i class="fas fa-file-alt"></i></a></li>
-                    <li><a href="{{ url('/usuariosTesistas') }}">Tesistas <i class="fas fa-graduation-cap"></i></a></li>
+                    @if(Auth::user()->priv < 5)
+                        <li><a href="{{ url('/tesis') }}">Tesis <i class="fas fa-file-alt"></i></a></li>
+                        <li><a href="{{ url('/usuariosTesistas') }}">Tesistas <i class="fas fa-graduation-cap"></i></a></li>
+                    @endif
                     @if(Auth::user()->priv <= 2)
                         <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios <i class="fas fa-users"></i></a></li>
                     @endif
@@ -106,7 +108,7 @@
                             {{ explode(" ",Auth::user()->nombre)[0]." (".Auth::user()->priv.")"  }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('/academicoHome') }}">Panel de actividades <i class="fas fa-tasks"></i></a></li>
+                            <li><a href="{{ url('/home') }}">Panel de actividades <i class="fas fa-tasks"></i></a></li>
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                         Cerrar sesión <i class="fas fa-sign-out-alt"></i>
@@ -147,7 +149,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 text-center">
-						&copy; Derechos Reservados 2013-2017 Universidad de Colima
+						&copy; Derechos Reservados 2013-2018 Universidad de Colima
                 </div>
             </div>
         </div>

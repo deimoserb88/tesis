@@ -49,6 +49,7 @@
                     </div>
                 </div>
             </div>
+            @if(Auth::user()->priv < 5)
             <div class="panel panel-default" style="margin-top: 10px;">
                 <div class="panel-heading">
                     <h3 class="panel-title">Roles</h3>
@@ -79,6 +80,7 @@
                     </table>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>

@@ -24,6 +24,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/academicoHome', 'AcademicoController@index')->name('academicoHome');
 
+Route::get('/tesistaHome', 'TesistaController@index')->name('tesistaHome');
+
 
 /**
  * Usuarios
@@ -100,9 +102,18 @@ Route::get('/tesisAprobar/{id}', function($id){
 
 Route::get('/tesisTesista/{id}','AcademicoController@tesisTesista')->name('tesisTesista');
 
+/**
+ * Ruta para asignar docentes (coasesores y revisores) a la tesis
+ */
 Route::post('/tesisAsignar','AcademicoController@tesisAsignar')->name('tesisAsignar');
 
+/**
+ * Rutas para asignar o remover tesistas de la tesis
+ */
 Route::get('/asignaTesista/{idtesis}/{idtesista}','AcademicoController@asignaTesista')->name('asignaTesista');
+Route::get('/tesisRemoverTesista/{idtesis}/{idtesista}','AcademicoController@tesisRemoverTesista')->name('tesisRemoverTesista');
+//*****************************************
+
 
 Route::post('/tesisGuardar','AcademicoController@tesisGuardar')->name('tesisGuardar');
 
@@ -120,8 +131,6 @@ Route::post('/getTesistas', function(Request $request){
 })->name('getTesistas');
 
 
-
-
 Route::post('/getTesisId', function(Request $request){
 	if($request->ajax()){
 		$tesis = tesis\Tesis::select('id','nom')
@@ -133,6 +142,26 @@ Route::post('/getTesisId', function(Request $request){
 		return [false];
 	}
 })->name('getTesisId');
+
+//Guardar la URL del documento de Google Drive
+Route::post('/tesisGuardarUrl',function(Request $request){
+	if($request->ajax()){
+		tesis\Tesis::where('id',$request->idtesis)
+					->update(['urldoc'=>$request->urldoc]);
+	}
+	return [true];
+})->name('tesisGuardarUrl');
+
+//Subir archivo de PDF
+Route::get('/tesisSubirPdf/{idtesis}', function($idtesis){
+	$t = tesis\Tesis::where('id',$idtesis)->get();
+	return view('tesista.tesissubirpdf',compact('t'));
+})->name('tesisSubirPdf');
+
+Route::post('/tesisGuardarPdf','TesistaController@tesisGuardarPdf')->name('tesisGuardarPdf');
+
+
+
 
 Route::post('/getTesisDetalle', 'AcademicoController@getTesisDetalle')->name('getTesisDetalle');
 

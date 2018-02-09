@@ -46,7 +46,7 @@
                         @if(strlen($u->first()->nocontrol) == 4)
                           @if(Auth::user()->priv <= 2){{-- Solo si tiene privilegios 1 o 2 puede cambiar los privilegios del usuario --}}
                           <select name="priv" class="form-control" id="priv">
-                              @foreach(range(Auth::user()->priv+1,5) as $prv)
+                              @foreach(range(Auth::user()->priv+1,4) as $prv)
                                   <option value="{{ $prv }}" {{ ($prv == $u->first()->priv?'selected="selected"':'') }}>{{ tesis\User::priv($prv) }}</option>
                               @endforeach
                           </select>

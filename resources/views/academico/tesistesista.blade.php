@@ -44,7 +44,9 @@
 								<tr>
 									<td>{{ $tesista->nocontrol }}</td>
                                     <td>{{ $tesista->nombre }}</td>
-									<td class="text-center">&nbsp;</td>
+									<td class="text-center">
+                                        <a class="btn btn-danger btn-xs" href="{{ url('tesisRemoverTesista/'.$t[0]->id.'/'.$tesista->id) }}"><i class="far fa-trash-alt"></i> </a>                                        
+                                    </td>
 								</tr>
 							@endforeach
 						</tbody>
@@ -60,8 +62,6 @@
         </div>
     </div>
 </div>
-
-
 
 {{-- Modal para asignar tesis a usuario --}}
 
@@ -141,7 +141,7 @@
             "info": false,
             "language": {
                 "search": "Filtrar:",
-                "zeroRecords": "No se encontraron registros que coincidan",
+                "zeroRecords": "No hay tesistas disponibles",
             },
             "select": true,
             "emptyTable" : "No hay datos para mostrar",

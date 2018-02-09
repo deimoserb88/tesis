@@ -118,8 +118,8 @@
 									<td>
                                         @if(Auth::user()->priv <= 3 )
                                             <div class="btn-group" rol="group">
-                                                <a href="{{ url('/usuarioEditar/'.$usuario->id) }}" class="btn btn-info btn-sm"><i class="fa  fa-pencil"></i></a>
-                                                <a href="#" class="btn btn-info btn-sm dt {{ $usuario->idtesis==''?'disabled':'' }}" data-idtesis="{{ $usuario->idtesis }}"  data-nombre="{{ $usuario->nombre }}"><i class="fa fa-file-text"></i></a>
+                                                <a href="{{ url('/usuarioEditar/'.$usuario->id) }}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                                <a href="#" class="btn btn-info btn-sm dt {{ $usuario->idtesis==''?'disabled':'' }}" data-idtesis="{{ $usuario->idtesis }}"  data-nombre="{{ $usuario->nombre }}"><i class="fas fa-file-alt"></i></a>
 
                                                 @if($rolvalido || Auth::user()->priv == 1)
                                                     <a href="#" class="btn btn-danger btn-sm eliminar" data-nombre="{{ $usuario->nombre }}" data-id="{{ $usuario->id }}:{{ $usuario->priv }}" ><i class="fa fa-trash"></i></a>
@@ -228,24 +228,34 @@
         <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close cancelar" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title nombre-tesista bg-warning"></h4>
+                    <h4 class="modal-title">Tesistas: <span class="nombre-tesista bg-warning"></span></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-2 etitulo">Titulo:</div>
-                        <div class="col-sm-10 dtitulo"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2 edescripcion">Descripción:</div>
-                        <div class="col-sm-10 ddescripcion"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2 easesor">Asesor:</div>
-                        <div class="col-sm-10 dasesor"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2 eestado">Estado:</div>
-                        <div class="col-sm-10 destado"></div>
+                    <div class="alert alert-info detalles-tesis">
+                        <div class="row">
+                            <div class="col-sm-2 etitulo">Titulo:</div>
+                            <div class="col-sm-10 dtitulo"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 edescripcion">Descripción:</div>
+                            <div class="col-sm-10 ddescripcion"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 easesor">Asesor:</div>
+                            <div class="col-sm-10 dasesor"></div>
+                        </div>                    
+                        <div class="row">
+                            <div class="col-sm-2 ecoasesores">Coasesores:</div>
+                            <div class="col-sm-10 dcoasesores"></div>
+                        </div>                    
+                        <div class="row">
+                            <div class="col-sm-2 erevisores">Revisores:</div>
+                            <div class="col-sm-10 drevisores"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 eestado">Estado:</div>
+                            <div class="col-sm-10 destado"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -335,7 +345,7 @@
 
         $('.dt').click(function(){
             var dt = $(this);
-            $('.nombre-tesista').text(dt.data('nombre'));
+            //$('.nombre-tesista').text(dt.data('nombre'));
             var r = $.post(
                         "{{ url('/getTesisDetalle') }}",
                         {
@@ -343,16 +353,28 @@
                             _token:$('meta[name="csrf-token"]').attr("content")
                         }
                     );
-
+            var tesis = asesor = coasesores = revisores = tsts = '';
             r.done(function(resp){
                 console.log(resp);
                 $('.dtitulo').html('<strong>'+resp['tesis'][0].nom+'</strong>');
                 $('.ddescripcion').html('<strong>'+resp['tesis'][0].desc+'</strong>');
-                $('.dasesor').html('<strong>'+resp['asesor'][0].nombre+'</strong>');
+                resp.docentes.forEach(function(v){
+                    switch(v.rol){
+                        case 6: asesor = v.nombre + ', ' + asesor;break;
+                        case 7: coasesores = v.nombre + ', ' + coasesores;break;
+                        case 8: revisores = v.nombre + ', ' + revisores;break;
+                    }
+                });
+                $('.dasesor').html('<strong>'+asesor+'</strong>');
+                $('.dcoasesores').html(coasesores.length>0?'<strong>'+coasesores+'</strong>':'<em class="text-muted">No definido</em>');
+                $('.drevisores').html(revisores.length>0?'<strong>'+revisores+'</strong>':'<em class="text-muted">No definidos</em>');
                 $('.destado').html('<strong>'+['','','','Asignada','Concluida'][resp['tesis'][0].estado]+'</strong>');
 
+                resp.tesistas.forEach(function(v){
+                    tsts = v.nombre + ', ' + tsts;
+                });
+                $('.nombre-tesista').html(tsts);
             });
-
             $('#detalletesista').modal('toggle');
 
         });

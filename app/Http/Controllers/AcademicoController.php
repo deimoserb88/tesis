@@ -160,7 +160,11 @@ where c.id = 4*/
 
 
             if($request->priv < 5){
-                return redirect()->action('AcademicoController@usuariosAcademicos');
+                
+                return redirect()->action('AcademicoController@usuarioRoles',['id'=>$request->id]);
+                
+                //return redirect()->action('AcademicoController@usuariosAcademicos');
+                
             }elseif($request->priv == 5){
                 return redirect()->action('AcademicoController@usuariosTesistas');
             }else{
@@ -234,7 +238,8 @@ where c.id = 4*/
         }else{
             Tesista::insert($datos + ['gen'=>$request->gen]);
         }
-            return redirect()->route('usuarioRoles',['id'=>$request->id]);
+        
+        return redirect()->route('usuarioRoles',['id'=>$request->id]);
     }
 
 
@@ -361,35 +366,39 @@ where c.id = 4*/
  * @return [type]           [description]
  */
     public function tesisAsignar(Request $request){
-        UT::updateOrCreate([
-                    'idusuario'=>$request->id,
-                    'idtesis'=>$request->idtesis,
-                    'idprograma'=>$request->prog,
-                    'rol'=>$request->rol
-                ]);
+        UT::updateOrCreate( ['idusuario'=>$request->id,'idtesis'=>$request->idtesis],
+                            ['idprograma'=>$request->prog,
+                             'rol'=>$request->rol
+                            ]);
         return redirect()->route('usuarioRoles',['id'=>$request->id]);
     }
 
     public function tesisTesista(Request $request,$id){
-        //la tesis en custion
+        //la tesis en cuestion
         $t = Tesis::select('tesis.id','tesis.nom','tesis.tesistas','programa.abrev')
                     ->join('programa','tesis.idprograma','=','programa.id')
                     ->where('tesis.id','=',$id)
                     ->get();
 
         //los tesistas asignados a la tesis
-        $ta = User::select('nocontrol','nombre')
+        $ta = User::select('users.id','nocontrol','nombre')
                     ->join('tesista','users.id','=','tesista.idusuario')
                     ->where('tesista.idtesis','=',$id)
                     ->get();
 
-        //Se seleccionaran solo a los tesistas de programas en los que el usuario tenga rol
-        $urol = $request->session()->get('rol');
+        //Se seleccionaran solo los tesistas del programas al que pertenece la tesis....
+        $idprograma = Programa::select('programa.id')
+                    ->leftJoin('tesis','programa.id','=','tesis.idprograma')
+                    ->where('tesis.id','=',$id)
+                    ->get();
 
-        //los tesistas disponibles para asignar
+        //...los tesistas disponibles para asignar
         $tt = User::select('users.id','users.nocontrol','users.nombre')
                     ->join('tesista','users.id','=','tesista.idusuario')
+                    ->whereNull('tesista.idtesis')
+                    ->where('tesista.idprograma','=',$idprograma->first()->id)
                     ->get();
+        $urol = $request->session()->get('rol'); //el rol del usuario en sesion
 
         return view('academico.tesistesista',compact('t','ta','tt','urol'));
 
@@ -398,13 +407,19 @@ where c.id = 4*/
     public function asignaTesista(Request $request){
         $gencarr = Tesis::select('gen','idprograma')->find($request->idtesis);
 
-        Tesista::updateOrCreate([
-                'idusuario' => $request->idtesista,
-                'idtesis' => $request->idtesis,
-                'idprograma' => $request->idprograma,
+        Tesista::updateOrCreate(['idusuario' => $request->idtesista],
+                ['idprograma' => $gencarr->idprograma,
                 'gen' => $gencarr->gen,
+                'idtesis' => $request->idtesis]
+            );
+        Tesis::where('id',$request->idtesis)->update(['estado'=>3]);
+        return redirect()->route('tesisTesista',['id'=>$request->idtesis]);
+    }
 
-        ]);
+    public function tesisRemoverTesista(Request $request){
+        Tesista::where('idusuario','=',$request->idtesista)
+                ->where('idtesis','=',$request->idtesis)
+                ->delete();
         return redirect()->route('tesisTesista',['id'=>$request->idtesis]);
     }
 

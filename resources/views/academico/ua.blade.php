@@ -52,7 +52,7 @@
 									<td>{{ $ua->nocontrol }}</td>
 									<td>{{ $ua->nombre }}</td>
 									<td class="text-center">
-                                        @if(Auth::user()->priv <=3 )
+                                        @if(Auth::user()->priv <= 3 )
 								            <div class="btn-group" rol="group">
                                                 <a href="{{ url('/usuarioEditar/'.$ua->id) }}" class="btn btn-info btn-sm"><i class="fas  fa-pencil-alt"></i></a>
                                                 @if(strlen($ua->nocontrol)<=4)

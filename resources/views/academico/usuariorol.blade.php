@@ -67,7 +67,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="asignarrol">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form action="{{ url('rolAsignar') }}" method="post" id="usuarioGuardar"  class="form-horizontal">
+            <form action="{{ url('rolAsignar') }}" method="post" id="rolAsignar"  class="form-horizontal">
              {{ csrf_field() }}
              <input type="hidden" name="id" value="{{ $u[0]->id }}">
                 <div class="modal-header">

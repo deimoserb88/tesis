@@ -116,8 +116,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" rol="group">
-                        <button type="button" class="btn btn-danger cancelar" data-dismiss="modal">Cancelar <i class="fa fa-btn fa-close"></i></button>
-                        <button type="submit" class="btn btn-success">Guardar <i class="fa fa-btn fa-check"></i></button>
+                        <button type="button" class="btn btn-danger cancelar" data-dismiss="modal">Cancelar <i class="fas fa-times"></i></button>
+                        <button type="submit" class="btn btn-success">Guardar <i class="fas fa-check"></i></button>
                     </div>                    
                 </div>
             </form>

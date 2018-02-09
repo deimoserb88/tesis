@@ -36,6 +36,7 @@ class User extends Authenticatable
                 'Profesor de Seminario',
                 'Docente',
                 'Tesista',
+                9=>'No definida',
                 ][$p];
     }   
 

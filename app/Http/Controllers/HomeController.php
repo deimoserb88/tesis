@@ -37,14 +37,14 @@ class HomeController extends Controller
             $request->session()->put('ut',$ut);
             return view('academico.home');
         }elseif(Auth::user()->priv == 5){
-            return "Tesista Home en construcción"; //view('tesista.home');
+            return redirect()->action('TesistaController@index');//view('tesista.home');
         }else{ //priv == 9, es un usuario nuevo al que no se le ha asignado rol o tesis
             if(strlen(Auth::user()->nocontrol) == 4){
                 //es academico
                 $tu = 'a';
                 //coordinadores y presidentes de academia, los directivos no tienen ro,l asociado a programas
                 $u = User::select('users.id','users.nombre','users.email','users.priv','rol.rol','programa.abrev')
-                            ->join('rol','users.id','=','rol.idusuario')
+                            ->leftJoin('rol','users.id','=','rol.idusuario')
                             ->leftJoin('programa','rol.idprograma','=','programa.id')
                             ->where('rol.rol','<=','4')
                             ->distinct()
@@ -59,8 +59,7 @@ class HomeController extends Controller
                 if(count($t)>0){
                     $u = User::select('users.id','users.nombre','users.email','users.priv','rol.rol')
                                 ->join('rol','users.id','=','rol.idusuario')
-                                ->where('rol.rol','>=','3')
-                                ->where('rol.rol','<=','5')
+                                ->whereIn('rol.rol',[4,5])                                
                                 ->where('rol.idprograma','=',$t[0]['idprograma'])
                                 ->distinct()
                                 ->get();
@@ -78,7 +77,7 @@ class HomeController extends Controller
         $t->gen = $request->gen;
         $t->save();
 
-        //$s = User::where('id','=',$request->idusuario)->update(['priv'=>5]);
+        $s = User::where('id','=',$request->idusuario)->update(['priv'=>5]);
 
         return redirect()->action('HomeController@index');
     }
