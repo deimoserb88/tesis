@@ -26,23 +26,33 @@ class TesistaController extends Controller
     				->join('tesista','tesis.id','=','tesista.idtesis')
     				->where('tesista.idusuario',Auth::user()->id)
     				->get();
-    	//El asesor, coasesor y revisores
-        $acr = User::select('users.nombre','users.email','ut.rol')
-                    ->join('ut','users.id','=','ut.idusuario')
-                    ->where('ut.idtesis',$t->first()->id)
-                    ->orderBy('ut.rol')
-                    ->get();
+                    
+        if(count($t) > 0 ){
+            //El asesor, coasesor y revisores
+            $acr = User::select('users.nombre','users.email','ut.rol')
+                            ->join('ut','users.id','=','ut.idusuario')
+                            ->where('ut.idtesis',$t->first()->id)
+                            ->orderBy('ut.rol')
+                            ->get();
 
-    	if(count($t) > 0 ){
-    		//ver si hay otros tesistas en la tesis
+                            //ver si hay otros tesistas en la tesis
     		$tsts = User::select('nombre')
     					->join('tesista','users.id','=','tesista.idusuario')
     					->where('tesista.idtesis',$t->first()->id)
                         ->orderBy('nombre')
                         ->get();
-    	}
+        }else{
+            //El presidente de la academia por si no tiene tesis asignada
+            $tst = Tesista::select('idprograma')
+                        ->where('idusuario',Auth::user()->id)
+                        ->get();
+            $pa = User::select('users.id','nombre','email','rol.rol')
+                        ->join('rol','users.id','=','rol.idusuario')
+                        ->where([['rol.idprograma',$tst->first()->idprograma],['rol.rol','<',6]])
+                        ->get();
+        }
         
-    	return view('tesista.home',compact('t','acr','tsts'));
+    	return view('tesista.home',compact('t','acr','tsts','pa'));
     }
 
     public function tesisGuardarPdf(Request $request){
@@ -58,8 +68,9 @@ class TesistaController extends Controller
 
             $request->pdf->move(storage_path('app/public/tesis/'),$nnombre);
 
+            Tesis::where('id',$request->idtesis)->update(['pdf' => $nnombre]);
 
-            return view('tesista.tesissubirpdf',compact('t'));
+            return redirect()->action('TesistaController@index');
         }
         if(count($errors) > 0){
             

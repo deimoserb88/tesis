@@ -1,4 +1,4 @@
-@extends('layouts.academico')
+@extends('layouts.academico',['rol'=>min(array_column(Request::session()->get('rol'),'rol'))])
 
 @section('estilos')
 {{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}    
@@ -50,8 +50,8 @@
                                 <td class="text-center">
                                     <div class="btn-group" rol="group">
                                         <a class="btn btn-primary btn-sm vm" data-idmensaje="{{ $mensaje->id }}"  data-toggle="modal" data-target="#vermensaje" href="#" ><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning btn-sm" href="#"><i class="fas fa-reply"></i></a>
-                                        <a class="btn btn-danger btn-sm" href="#"><i class="fas fa-trash"></i></a>
+                                        <a class="btn btn-warning btn-sm em" href="#" data-toggle="modal" data-target="#emensaje" data-usuario="{{ $mensaje->nombre }}" data-idusuario="{{ $mensaje->idusuario_de }}"><i class="fas fa-reply"></i></a>
+                                        <a class="btn btn-danger btn-sm borrar-mensaje" data-idmensaje="{{ $mensaje->id }}" href="#"><i class="fas fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -81,6 +81,30 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" tabindex="-1" role="dialog" id="emensaje">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title nombre-usuario"></h4>
+            </div>
+            <div class="modal-body">
+                <textarea name="mensaje" class="form-control" id="mensaje" cols="70" rows="5"></textarea>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group" rol="group">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar <i class="fas fa-times"></i></button>
+                    <button type="button" class="btn btn-success" id="idusuario" value="">Enviar <i class="fab fa-telegram-plane"></i> </button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
 @endsection
 
 @section('scripts')
@@ -91,6 +115,40 @@
 <script  type="text/javascript">
 
     $(document).ready(function() {
+
+        $('.em').click(function(){
+            var em = $(this);
+            $('.nombre-usuario').text('Mensaje para: ' + em.data('usuario'));
+            $('#idusuario').val(em.data('idusuario'));
+            $('#mensaje').val("");
+        });
+
+        $('#idusuario').click(function(e){
+            var idu = $(this);
+            var em = $.post(
+                        "{{ url('enviarMensaje') }}",
+                        {
+                            idusuario:idu.val(),
+                            mensaje:$('#mensaje').val(),
+                            _token:$('meta[name="csrf-token"]').attr("content")
+                        }
+                    );
+            em.done(function(resp){
+                alert('Mensaje enviado');
+            });
+            em.always(function(resp){
+                //console.log(resp);
+            });
+            $('#emensaje').modal('hide');
+        });
+
+        $(".borrar-mensaje").click(function(){
+            var mb = $(this);
+            if(confirm("¿Está seguro de boorar el mensaje seleccionado? ")){
+                window.location.href = '{{ url("mensajeBorrar") }}/' + mb.data("idmensaje");
+            }
+        });
+
         $('#tmensajes').DataTable({
             "scrollY": 480,
             "scrollCollapse": true,

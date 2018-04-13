@@ -1,4 +1,4 @@
-@extends('layouts.academico')
+@extends('layouts.academico',['rol'=>$urol])
 
 @section('estilos')
 {{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}	
@@ -21,7 +21,7 @@
                     <div class="row">                        
                         <div class="col-sm-8">Tesis:</div>
                         <div class="col-sm-4 text-right">
-                            @if(Auth::user()->priv <= 2)
+                            @if(Auth::user()->priv <= 2 || $urol <= 4)
                             <button class="btn btn-default btn-xs"  data-toggle="modal" data-target="#asignatesis">Asignar <i class="fa fa-btn fa-plus"></i> </button>
                             @endif
                         </div>                        

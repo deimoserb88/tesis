@@ -1,4 +1,4 @@
-@extends('layouts.academico')
+@extends('layouts.academico',['rol'=>min($urol)])
 
 @section('estilos')
 {{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}
@@ -55,7 +55,7 @@
                 </div>
                 <div class="panel-footer">
                     <div class="text-right">
-                        <a href="/tesis" class="btn btn-default"><i class="fas fa-reply"></i></a>
+                        <a href="{{ url('tesis') }}" class="btn btn-default"><i class="fas fa-reply"></i></a>
                     </div>
                 </div>
             </div>

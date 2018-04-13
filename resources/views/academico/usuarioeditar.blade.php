@@ -1,4 +1,4 @@
-@extends('layouts.academico')
+@extends('layouts.academico',['rol'=>min(Request::session()->get('rol'))])
 
 @section('content')
 <div class="container">

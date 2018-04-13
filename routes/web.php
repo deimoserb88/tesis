@@ -90,10 +90,7 @@ Route::get('/tesis','AcademicoController@tesis')->name('tesis');
 
 Route::get('/tesisNueva', 'AcademicoController@tesisNueva')->name('tesisNueva');
 
-Route::get('/tesisEditar/{id}', function($id){
-	$d = tesis\Tesis::where('id','=',$id)->get();
-	return view('academico.tesiseditar',compact('t'));
-})->name('tesisNueva');
+Route::get('/tesisEditar/{id}', 'AcademicoController@tesisEditar')->name('tesisEditar');
 
 Route::get('/tesisAprobar/{id}', function($id){
 	tesis\Tesis::where('id','=',$id)->update(['estado'=>2]);
@@ -108,6 +105,11 @@ Route::get('/tesisTesista/{id}','AcademicoController@tesisTesista')->name('tesis
 Route::post('/tesisAsignar','AcademicoController@tesisAsignar')->name('tesisAsignar');
 
 /**
+ * Ruta para remover docentes (coasesores y revisores) a la tesis
+ */
+Route::get('/tesisRemoverRevisor/{idusuario}/{idtesis}','AcademicoController@tesisRemoverRevisor')->name('tesisRemoverRevisor');
+
+/**
  * Rutas para asignar o remover tesistas de la tesis
  */
 Route::get('/asignaTesista/{idtesis}/{idtesista}','AcademicoController@asignaTesista')->name('asignaTesista');
@@ -116,6 +118,12 @@ Route::get('/tesisRemoverTesista/{idtesis}/{idtesista}','AcademicoController@tes
 
 
 Route::post('/tesisGuardar','AcademicoController@tesisGuardar')->name('tesisGuardar');
+
+Route::get('/tesisEliminar/{idtesis}', function($idtesis){
+	tesis\Tesis::where('id',$idtesis)->delete();
+	return redirect()->action('AcademicoController@tesis');
+});
+
 
 Route::post('/getTesistas', function(Request $request){
 	if($request->ajax()){
@@ -160,7 +168,14 @@ Route::get('/tesisSubirPdf/{idtesis}', function($idtesis){
 
 Route::post('/tesisGuardarPdf','TesistaController@tesisGuardarPdf')->name('tesisGuardarPdf');
 
-
+Route::get('/tesisPdfVer/{id}', function($id){
+	$ruta = tesis\Tesis::select('pdf')->where('id',$id)->get();
+	if(Auth::user()->priv == 5){
+		return view('tesista.tesispdfver',compact('ruta'));
+	}else{
+		return view('academico.tesispdfver',compact('ruta'));
+	}
+})->name('tesisPdfVer');
 
 
 Route::post('/getTesisDetalle', 'AcademicoController@getTesisDetalle')->name('getTesisDetalle');
@@ -192,9 +207,14 @@ Route::post('/leerMensaje',function(Request $request){
 									->join('users','mensaje.idusuario_de','=','users.id')
 									->where('mensaje.id','=',$request->idmensaje)
 									->get()->toArray();
-		tesis\Mensaje::where('mensaje.id','=',$request->idmensaje)->update(['leido'=>'1']);
+		tesis\Mensaje::where('mensaje.id',$request->idmensaje)->update(['leido'=>'1']);
 		return response()->json($mensaje);
 	}else{
 		return [false];
 	}
+});
+
+Route::get('/mensajeBorrar/{idmensaje}',function($idmensaje){	
+	tesis\Mensaje::where('id',$idmensaje)->delete();
+	return redirect()->action('AcademicoController@mensajes',['idu'=>Auth::user()->id,'fmensaje'=>2]);
 });

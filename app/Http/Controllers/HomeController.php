@@ -35,14 +35,18 @@ class HomeController extends Controller
             $request->session()->put('rol',$rol);
             $ut = UT::select('idtesis')->where('idusuario','=',Auth::user()->id)->get()->toArray();
             $request->session()->put('ut',$ut);
-            return view('academico.home');
+            $urol = Rol::where('idusuario',Auth::user()->id)->min('rol');            
+            return view('academico.home',compact('urol'));
         }elseif(Auth::user()->priv == 5){
+            $prg = Tesista::select('idprograma')->where('idusuario',Auth::user()->id)->get()->toArray();
+            array_push($prg,['rol'=>9]);
+            $request->session()->put('rol',$prg);
             return redirect()->action('TesistaController@index');//view('tesista.home');
         }else{ //priv == 9, es un usuario nuevo al que no se le ha asignado rol o tesis
             if(strlen(Auth::user()->nocontrol) == 4){
                 //es academico
                 $tu = 'a';
-                //coordinadores y presidentes de academia, los directivos no tienen ro,l asociado a programas
+                //coordinadores y presidentes de academia, los directivos no tienen rol asociado a programas
                 $u = User::select('users.id','users.nombre','users.email','users.priv','rol.rol','programa.abrev')
                             ->leftJoin('rol','users.id','=','rol.idusuario')
                             ->leftJoin('programa','rol.idprograma','=','programa.id')
@@ -50,6 +54,7 @@ class HomeController extends Controller
                             ->distinct()
                             ->orderBy('rol.rol','asc')
                             ->get();
+               
             }else{
                 //es tesista
                 $tu = 't';

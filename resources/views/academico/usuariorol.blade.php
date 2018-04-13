@@ -1,4 +1,4 @@
-@extends('layouts.academico')
+@extends('layouts.academico',['rol'=>$urol])
 
 @section('estilos')
 {{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}
@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-sm-8">Roles:</div>
                         <div class="col-sm-4 text-right">
-                            @if(Auth::user()->priv <= 2)
+                            @if($urol <= 4)
                             <button class="btn btn-default btn-xs"  data-toggle="modal" data-target="#asignarrol">Asignar <i class="fa fa-btn fa-plus"></i> </button>
                             @endif
                         </div>
@@ -94,7 +94,8 @@
                     <label for="password" class="col-sm-4 control-label">Rol</label>
                     <div class="col-sm-8">
                         <select name="rol" class="form-control" id="rol" required="required">
-                            @foreach(range($urol[0]['rol'] + 1,9) as $i)
+                            {{--  @foreach(range($urol[0]['rol'] + 1,9) as $i)  --}}
+                            @foreach(range($urol + 1,9) as $i)
                                 <option value="{{ $i }}">{{ tesis\Rol::rol($i) }}</option>
                             @endforeach
                         </select>

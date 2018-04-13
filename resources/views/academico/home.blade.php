@@ -1,4 +1,4 @@
-@extends('layouts.academico')
+@extends('layouts.academico',['rol'=>$urol])
 
 @section('content')
 <div class="container">
@@ -9,11 +9,11 @@
                 <div class="panel-body">
                     <div class="list-group">
                         <a href="{{ url('/tesis') }}" class="list-group-item"><i class="fas fa-file-alt"></i> Tesis</a>
-                        @if(in_array(Auth::user()->priv,[1,2,3,4,5]))
+                        @if(Auth::user()->priv < 5)
                             <a href="{{ url('/usuariosTesistas') }}" class="list-group-item"><i class="fas fa-graduation-cap"></i> Tesistas </a>
                         @endif
-                        @if(in_array(Auth::user()->priv,[1,2]))
-                            <a href="{{ url('/usuariosAcademicos') }}" class="list-group-item">Usuarios académicos</a>
+                        @if(in_array(Auth::user()->priv,[1,2]) || in_array($urol,[1,2,3,4]))
+                            <a href="{{ url('/usuariosAcademicos') }}" class="list-group-item"><i class="fas fa-users"></i> Usuarios académicos </a>
                         @endif
                             <a href="{{ route('logout') }}" class="list-group-item" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

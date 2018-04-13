@@ -9,15 +9,25 @@
                 <div class="panel-body">
                     <div class="list-group">
                         <div class="list-group-item">
-                            <h4 class="list-group-item-heading"><i class="fas fa-file-alt"></i> Tesis</h4>
-                            <p class="list-group-item-text">
-                                <table class="table table-hover"> 
+                        <h4 class="list-group-item-heading"><i class="fas fa-file-alt"></i> Tesis</h4>
+                            @if(count($t)>0)
+                            <div class="list-group-item-text">
+                                <table class="table table-hover">                                                                         
                                         <tr>
                                             <td>Título</td>
-                                            <td>{{ $t->first()->nom }} ({{ $t->first()->id }})</td>
+                                            <td>
+                                                @if(!is_null($t->first()->pdf))
+                                                    <a href="{{ url('tesisPdfVer').'/'.$t->first()->id }}">
+                                                @endif
+                                                @if(strlen($t->first()->nom)>50)
+                                                    {{ substr($t->first()->nom,0,50) }}...
+                                                @else
+                                                    {{ $t->first()->nom }}
+                                                @endif                                                
+                                                @if(!is_null($t->first()->pdf))</a>@endif - {{ tesis\Tesis::tesisEstado($t->first()->estado) }}</td>
                                             <td>
                                                 <div class="btn-group">
-                                                  <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                  <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fab fa-google-drive"></i>&nbsp;&nbsp;<i class="fa fa-file-pdf"></i>&nbsp;&nbsp;<i class="caret"></i>
                                                   </button>
                                                   <ul class="dropdown-menu">
@@ -25,12 +35,12 @@
                                                     <li class="{{ !is_null($t->first()->urldoc)?'':'disabled' }}" id="abrirUrl"><a href="{{ $t->first()->urldoc }}" target="_blank"><i class="fab fa-google-drive"></i> Abrir documento en Google Drive</a></li>
                                                     <li role="separator" class="divider"></li>
                                                     <li><a href="{{ url('tesisSubirPdf')."/".$t->first()->id }}"><i class="fas fa-upload"></i> Subir archivo PDF</a></li>
-                                                    <li class="disabled"><a href="#"><i class="far fa-file-pdf"></i> Abrir archivo PDF</a></li>
+                                                    <li class="{{ !is_null($t->first()->pdf)?'':'disabled' }}"><a href="{{ url('tesisPdfVer').'/'.$t->first()->id }}"><i class="far fa-file-pdf"></i> Abrir archivo PDF</a></li>
                                                   </ul>
                                                 </div>                                                
                                             </td>
                                         </tr>
-                                        <tr><td>Descripción</td><td>{{ $t->first()->desc }}</td><td>&nbsp;</td></tr>
+                                        <tr><td>Descripción</td><td width="65%">{{ $t->first()->desc }}</td><td>&nbsp;</td></tr>
                                         <tr><td>Generación</td><td>{{ $t->first()->gen }}</td><td>&nbsp;</td></tr>
                                         @foreach($acr as $asesor)
                                             <tr>
@@ -38,8 +48,8 @@
                                                 <td>{{ $asesor->nombre }}</td>
                                                 <td>
                                                     <div class="btn-group" rol="group">
-                                                        <a href="#" class="btn btn-warning btn-xs em" data-usuario="{{ $asesor->nombre }}" data-idusuario="{{ $asesor->id }}" data-toggle="modal" data-target="#emensaje"><i class="far fa-comment" ></i></a>
-                                                        <a href="#" data-email="{{ $asesor->email }}" class="btn btn-success btn-xs email">
+                                                        <a href="#" class="btn btn-warning btn-sm em" data-usuario="{{ $asesor->nombre }}" data-idusuario="{{ $asesor->id }}" data-toggle="modal" data-target="#emensaje"><i class="far fa-comment" ></i></a>
+                                                        <a href="#" data-email="{{ $asesor->email }}" class="btn btn-success btn-sm email">
                                                             <i class="fas fa-envelope"></i>
                                                             <i class="fas fa-long-arrow-alt-right"></i>
                                                             <i class="fas fa-clipboard"></i>
@@ -54,7 +64,30 @@
                                             @endforeach
                                         </td><td>&nbsp;</td></tr>
                                 </table>
-                            </p>
+                            </div>
+                            @else
+                            <div class="list-group-item-text">
+                                <h4>Aún no tienes una tesis asignada</h4>
+                                <div class="alert alert-info">
+                                    Solicita la asignación de tu tesis a un miembro de la academia de tu carrera<br>
+                                    @foreach($pa as $pacademia)
+                                    <div class="row" style="margin-top:2px;">
+                                        <div class="col-md-4">                                            
+                                            {{ $pacademia->nombre }}
+                                        </div>
+                                        <div class="col-md-4">                                            
+                                            {{ tesis\Rol::rol($pacademia->rol ) }}
+                                        </div>
+                                        <div class="col-md-4">                                            
+                                            <a href="#" class="btn btn-warning btn-xs em" data-usuario="{{ $pacademia->nombre }}" data-idusuario="{{ $pacademia->id }}" data-toggle="modal" data-target="#emensaje"><i class="far fa-comment" ></i></a>
+                                        </div>
+                                    </div>
+                                    @endforeach
+
+                                </div>
+
+                            </div>
+                            @endif
                         </div>
                         <a href="{{ route('logout') }}" class="list-group-item" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -87,7 +120,7 @@
         </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+@if(count($t)>0)
 <div class="modal fade" tabindex="-1" role="dialog" id="enlacegdrive">
   <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -99,8 +132,9 @@
             <div class="alert alert-warning">
                 En Goggle Drive, seleccione la opción de compartir el enlace al documento y péguelo completo en el siguiente espacio. Si ya tiene un enlace anterior puede borrarlo e ingresar el nuevo.
             </div> 
-            <textarea rows="5" class="form-control" name="urldoc" id="urldoc" placeholder="URL del documento en Google Drive">
+            <textarea rows="5" class="form-control" name="urldoc" id="urldoc" placeholder="URL del documento en Google Drive">                
                 {{ $t->first()->urldoc }}
+                
             </textarea>
           </div>
           <div class="modal-footer">
@@ -112,7 +146,7 @@
         </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+@endif
 
 @endsection
 @section('scripts')

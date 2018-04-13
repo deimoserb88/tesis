@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="gen" class="col-sm-2 control-label">Email</label>
+                            <label for="gen" class="col-sm-2 control-label">Generación</label>
                             <div class="col-sm-2">
                                 <input type="number" min="{{ date('Y') }}" max="{{ date("Y") + 5 }}" value="{{ date('Y') }}" class="form-control" name="gen" id="gen" required="required">
                             </div>
@@ -80,10 +80,10 @@
                 <div class="panel-footer text-right">
                     <div class="btn-group" rol="group">
                         @if($tu == 't' && count($t) == 0)
-                            <a href="#" type="button" class="btn btn-success guardar">Guardar <i class="icon-guardar"></i></a>
+                            <a href="#" type="button" class="btn btn-success guardar disabled">Guardar <i class="fas fa-download"></i></a>
                         @endif
                         <a href="{{ route('logout') }}" class="btn btn-warning" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                        Salir <i class="icon-logout"></i></a>
+                        Salir <i class="fas fa-sign-out-alt"></i></a>
                     </div>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             {{ csrf_field() }}
@@ -150,6 +150,12 @@
 
         $('.guardar').click(function(){
             $('.tesistaProGen').trigger('submit');
+        });
+
+        $('#idprograma').change(function(){
+            if($(this).val() !== ""){
+                $('.guardar').removeClass('disabled');
+            }
         });
 
         $('.email').click(function(){

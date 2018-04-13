@@ -81,8 +81,9 @@
                         <li><a href="{{ url('/tesis') }}">Tesis <i class="fas fa-file-alt"></i></a></li>
                         <li><a href="{{ url('/usuariosTesistas') }}">Tesistas <i class="fas fa-graduation-cap"></i></a></li>
                     @endif
-                    @if(Auth::user()->priv <= 2)
-                        <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios <i class="fas fa-users"></i></a></li>
+
+                    @if(Auth::user()->priv <= 2 || $rol <= 4)
+                        <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios académicos <i class="fas fa-users"></i></a></li>
                     @endif
                 </ul>
 
@@ -105,7 +106,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ explode(" ",Auth::user()->nombre)[0]." (".Auth::user()->priv.")"  }} <span class="caret"></span>
+                            {{ explode(" ",Auth::user()->nombre)[0]  }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ url('/home') }}">Panel de actividades <i class="fas fa-tasks"></i></a></li>

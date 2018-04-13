@@ -1,10 +1,10 @@
-@extends('layouts.academico')
+@extends('layouts.academico',['rol'=>min(Request::session()->get('rol'))])
 @section('estilos')
 {{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css') }}
 @endsection
 @section('content')
 <div class="container">
-    <div class="row">
+    <div class="row">        
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -48,6 +48,12 @@
                         <div class="col-md-9">{{ tesis\User::priv(Auth::user()->priv) }}</div>
                     </div>
                 </div>
+                @if(Auth::user()->priv == 5)
+                <div class="panel-footer">
+                    <h4>{{ $tst->first()->programa }}</h4> 
+                    <h4>{{ $tst->first()->gen}}</h4>
+                </div>
+                @endif
             </div>
             @if(Auth::user()->priv < 5)
             <div class="panel panel-default" style="margin-top: 10px;">
