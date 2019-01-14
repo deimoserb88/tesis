@@ -67,7 +67,7 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/home') }}">
                     TESIS <i class="fa fa-btn fa-home"></i>
                 </a>
             </div>

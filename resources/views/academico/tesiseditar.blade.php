@@ -13,7 +13,7 @@
 		@if(!is_null($t->first()->id))
 			<input type="hidden" name="idtesis" value="{{ $t->first()->id }}">
 		@endif
-	<div class="panel panel-primary" style="width: 75%;margin: 0 auto;">
+	<div class="panel panel-primary" style="width: 80%;margin: 0 auto;">
 		<div class="panel-heading"><h4 class="panel-title">Registrar nueva tesis</h4></div>
 		<div class="panel-body">
 			<div class="form-group">				
@@ -47,10 +47,10 @@
 			</div>			
 			<div class="form-group">				
 				{{ Form::label('tesistas','Número de tesistas',['class'=>'col-sm-2']) }}
-				<div class="col-sm-1">
+				<div class="col-sm-2">
 					{{ Form::select('tesistas',['1'=>'1','2'=>'2','3'=>'3',],$t->first()->tesistas,['class'=>'form-control']) }}
 				</div>
-				<div class="col-sm-9"></div>
+				<div class="col-sm-8"></div>
 			</div>
 
 			

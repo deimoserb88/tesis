@@ -1,17 +1,41 @@
-@extends('layouts.academico',['rol'=>min(array_column($urol,'rol'))])
+@extends('layouts.academico',['rol'=>min(array_column(session('rol'),'rol'))])
 
 @section('estilos')
 {{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}
+{{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css') }}
 @endsection
 
 @section('content')
 
-<div class="container">
+<div class="container" id="app">
 
     <div class="panel panel-default" style="margin: 0 auto 30px;">
 		<div class="panel-heading">
 			<div class="row">
-			<div class="col-sm-10"><h3 class="panel-title">Tesis</h3></div>
+			<div class="col-sm-1"><h3 class="panel-title">Tesis</h3></div>			
+			<div class="col-sm-9">
+				Generación:
+				<div class="btn-group">
+                     <button type="button" class="btn btn-default">
+                    @if($gen == '%%')
+                        Todas las generaciones
+                    @else
+                        {{ $gen }}
+                    @endif
+                    </button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        @foreach($g as $gene)
+                            <li><a href="{{ url('/tesis/'.$gene->gen) }}">{{ $gene->gen }}</a></li>
+                        @endforeach
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ url('/tesis') }}">Todas las generaciones</a></li>
+
+                    </ul>
+                </div>				
+			</div>
 			<div class="col-sm-2">
 			    @if(in_array(6, array_column($urol, 'rol')))
 			    	<a href="{{ url('/tesisNueva') }}" class="btn btn-sm btn-default">Tesis nueva <i class="far fa-file"></i> </a>
@@ -52,17 +76,29 @@
 							</td>
 							<td>{{ $t->abrev }}</td>
 							<td>{{ $t->gen }}</td>
-							<td>{{ tesis\Tesis::tesisEstado($t->estado) }}</td>
+							<td>
+								@if($t->estado == 3)
+									<a href="#" class="estado" data-pk="{{ $t->id }}">
+										{{ tesis\Tesis::tesisEstado($t->estado) }}
+									</a>
+								@else
+									{{ tesis\Tesis::tesisEstado($t->estado) }}
+								@endif
+							</td>
 							<td  class="text-right">
 								<div class="btn-group" rol="group">
 								@if($t->estado == 1 && in_array(4, array_column($urol, 'rol')))
 									<a class="btn btn-success btn-sm aprobar" href="{{ url('tesisAprobar/'.$t->id) }}">Aprobar <i class="fas fa-check"></i></a>
-								<a class="btn btn-danger btn-sm eliminar" data-idtesis="{{ $t->id }}" href="#"><i class="fas fa-trash"></i></a>
+									<a class="btn btn-danger btn-sm eliminar" data-idtesis="{{ $t->id }}" href="#"><i class="fas fa-trash"></i></a>
 								@endif
 								@if(($t->estado>=2&&$t->estado<=3)&&((Auth::user()->priv>=2&&Auth::user()->priv<=3) || count(array_intersect([4,5], array_column($urol, 'rol')))>0))
 								{{-- Boton para asignar tesistas --}}
 									<a class="btn btn-primary btn-sm" href="{{ url('tesisTesista/'.$t->id) }}" ><i class="fas fa-users"></i></a>
-								@endif								
+								@endif	
+								
+									{{-- Boton para ver/asignar calificaciones El parametro d=>l es para definir el destino de retorno l->lista, v->asingar variables vue--}}
+									<a class="btn btn-success btn-sm" href="{{ route('cal',['idtesis'=>$t->id,'d'=>'l']) }}" ><i class="fas fa-tasks"></i></a>
+
 									{{--  Boton para ver el documento pdf  --}}
 									<a href="{{ url('tesisPdfVer').'/'.$t->id }}" class="btn btn-primary btn-sm ver-pdf {{ is_null($t->pdf) ? 'disabled' : '' }}"><img src="{{ url('/public/images/pdfS.png') }}"></a>
 								</div>								
@@ -100,13 +136,21 @@
 							</td>
 							<td>{{ $t->abrev }}</td>
 							<td>{{ $t->gen }}</td>
-							<td>{{ tesis\Tesis::tesisEstado($t->estado) }}</td>
+							<td>
+									{{ tesis\Tesis::tesisEstado($t->estado) }}
+								
+							</td>
 							<td class="text-right">
 								<div class="btn-group" rol="group">
 								@if($t->rol == 6)
 									<a href="{{ url('tesisEditar/'.$t->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
 								@endif
+
+								{{-- Boton para ver/asignar calificaciones El parametro d=>l es para definir el destino de retorno l->lista, v->asingar variables vue--}}
+								<a class="btn btn-success btn-sm" href="{{ route('cal',['idtesis'=>$t->id,'d'=>'l']) }}" ><i class="fas fa-tasks"></i></a>								
+								
 								<a href="{{ url('tesisPdfVer').'/'.$t->id }}" class="btn btn-primary btn-sm ver-pdf {{ is_null($t->pdf) ? 'disabled' : '' }}"><img src="{{ url('/public/images/pdfS.png') }}"></a>
+								<a href="{{ !is_null($t->urldoc)?$t->urldoc:'#' }}" target="_blank" class="btn btn-primary btn-sm ver-drive {{ is_null($t->urldoc) ? 'disabled' : '' }}"><i class="fab fa-google-drive"></i></a>
 								</div>
 							</td>
 						</tr>
@@ -115,35 +159,12 @@
 			</table>
 
 		</div>
-		<div class="panel-footer">
-			<button onclick="window.location.href='{{ url('tesisRemoverRevisor') }}'" data-idtesis="2" data-idusuario="16">Testear</button>
+		<div class="panel-footer text-muted">-FIE-
 		</div>
 	</div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="datostesis">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Tesis: <span class="bg-warning" id="ttitulo">***</span></h4>
-      </div>
-      <div class="modal-body">
-		<div class="alert alert-info detalles-tesis">
-			<div class="row"><div class="col-sm-2">Descripción</div><div class="col-sm-10" id="tdesc"></div></div>
-			<div class="row"><div class="col-sm-2">Tesistas</div><div class="col-sm-10" id="ttesistas"></div></div>
-			<div class="row"><div class="col-sm-2">Asesor</div><div class="col-sm-10" id="tasesor"></div></div>
-			<div class="row"><div class="col-sm-2">Coasesor</div><div class="col-sm-10" id="tcoasesor"></div></div>
-			<div class="row"><div class="col-sm-2">Revisores</div><div class="col-sm-10" id="trevisores"></div></div>
-		</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
+@include('academico.partials.detalletesis')
 
 @endsection
 
@@ -151,6 +172,7 @@
 
 {{ Html::script('/public/assets/vendor/datatables/media/js/jquery.dataTables.min.js') }}
 {{ Html::script('/public/assets/vendor/datatables/media/js/dataTables.bootstrap.min.js') }}
+{{ Html::script('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js') }}
 
 <script type="text/javascript">
 
@@ -170,13 +192,22 @@
 
     			$('#ttitulo').text(dt.data('titulo'));
     			$('#tdesc').html('<b>'+resp.tesis[0].desc+'</b>');
-    			var btnremove = ' <a href="#" class="text-danger" onclick="eliminarusuario(this)" ';    			
+    			
+    			//solo los jefes de carrera y los presidentes de academia poeden retiar a los coasesores/revisores
+    			@if(count(array_intersect([3,4],array_column($urol,'rol')))>0)
+    				var btnremoveOpen = ' <a href="#" class="text-danger" onclick="eliminarusuario(this)" ';
+    				var btnremoveClose ='"><i class="fas fa-times-circle"></i></a>, ';
+    			@else
+    				var btnremoveOpen = '<span ';    			
+    				var btnremoveClose ='"></span>,';    			
+    			@endif
+
     			resp.docentes.forEach(function(v){
 
-    				switch(v.rol){
+    				switch(Number(v.rol)){
     					case 6: asesores = v.nombre + ', ' + asesores;break;
-    					case 7: coasesores = '' + v.nombre + btnremove + 'data-idtesis="' + resp.tesis[0].id + '" data-idusuario="' + v.id + '"><i class="fas fa-times-circle"></i></a>, ' + coasesores;break;
-    					case 8: revisores = v.nombre + btnremove + 'data-idtesis="' + resp.tesis[0].id + '" data-idusuario="' + v.id + '"><i class="fas fa-times-circle"></i></a>, ' + revisores;break;
+    					case 7: coasesores = '' + v.nombre + btnremoveOpen + 'data-idtesis="' + resp.tesis[0].id + '" data-idusuario="' + v.id + btnremoveClose + coasesores;break;
+    					case 8: revisores = v.nombre + btnremoveOpen + 'data-idtesis="' + resp.tesis[0].id + '" data-idusuario="' + v.id + btnremoveClose + revisores;break;
     				}
 
     			});
@@ -187,11 +218,34 @@
     			resp.tesistas.forEach(function(v){
     				tsts = v.nombre + ', ' + tsts;
     			});
+    			$('#tntesistas').html(resp.tesis[0].tesistas);
     			$('#ttesistas').html(tsts.length>0?'<b>'+tsts+'</b>':'<em class="text-muted">Ningún tesista asignado</em>');
 
     		});
     		$('.detalles-tesis').show();
     	});
+
+
+        $.fn.editable.defaults.mode = 'popup';
+        $.fn.editable.defaults.placement = 'left';
+        $.fn.editable.defaults.params = function(params){
+            params._token = $('meta[name="csrf-token"]').attr("content");
+            return params;
+        };        
+
+        $(".estado").editable({
+            type: 'select',
+            source: [	{'value':4,'text':'Concluida'},            			
+            			{'value':6,'text':'Cacelada'},
+            		],
+            name: 'estado',
+            emptytext: 'ND',
+            pk: $(this).attr("data-pk"),
+            url: '{{ route('tesisEstado') }}',
+            title: 'Cambiar estado de la tesis'
+        });
+
+
 
         $('.tesis').DataTable({
             "scrollY": 480,
@@ -236,8 +290,8 @@
 	    			}
 
     			})
-    			.done(function(){
-    				console.log("Revisor eliminado");
+    			.done(function(r){
+    				console.log(r);
     			});
     	}
 

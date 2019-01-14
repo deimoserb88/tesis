@@ -1,4 +1,4 @@
-@extends('layouts.academico',['rol'=>min(array_column(Request::session()->get('rol'),'rol'))])
+@extends('layouts.academico',['rol'=>$urol[0]->rol])
 
 @section('estilos')
 {{ Html::style('/public/assets/vendor/datatables/media/css/dataTables.bootstrap.min.css') }}
@@ -6,9 +6,9 @@
 @endsection
 
 @section('content')
-<div class="container">
+<div class="container" id="app">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                 	<div class="row">
@@ -34,8 +34,6 @@
 
                                 </ul>
                             </div>
-
-
                 		</div>
                 		<div class="col-md-3 text-right">
                             @if(Auth::user()->priv <= 3 )
@@ -60,7 +58,7 @@
                                 {{-- solo con rol 5 o menor en el programa del tesista puede hacer cambios --}}
                                 @php
                                     $rolvalido = false;
-                                    foreach($rol as $roles){
+                                    foreach($urol as $roles){
                                         $rolvalido = $rolvalido || ($usuario->idprograma == $roles['idprograma'] && $roles['rol'] <= 5);
                                     }
                                 @endphp
@@ -119,7 +117,7 @@
                                         <div class="btn-group" rol="group">
                                         @if(Auth::user()->priv <= 3 )
                                                 @if($rolvalido || Auth::user()->priv == 1)
-                                                <a href="{{ url('/usuarioEditar/'.$usuario->id) }}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                                    <a href="{{ url('/usuarioEditar/'.$usuario->id) }}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif
                                                 <a href="#" class="btn btn-info btn-sm dt {{ $usuario->idtesis==''?'disabled':'' }}" data-idtesis="{{ $usuario->idtesis }}"  data-nombre="{{ $usuario->nombre }}"><i class="fas fa-file-alt"></i></a>
 
@@ -224,74 +222,9 @@
 </div><!-- /.modal -->
 
 
-{{-- Modal para ver detalles del tesista: titrulo de tesis, descripcion, asesor, coasesro, etc. --}}
+@include('academico.partials.detalletesista');
 
-<div class="modal fade" tabindex="-1" role="dialog" id="detalletesista">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close cancelar" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Tesistas: <span class="nombre-tesista bg-warning"></span></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-info detalles-tesis">
-                        <div class="row">
-                            <div class="col-sm-2 etitulo">Titulo:</div>
-                            <div class="col-sm-10 dtitulo"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2 edescripcion">Descripción:</div>
-                            <div class="col-sm-10 ddescripcion"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2 easesor">Asesor:</div>
-                            <div class="col-sm-10 dasesor"></div>
-                        </div>                    
-                        <div class="row">
-                            <div class="col-sm-2 ecoasesores">Coasesores:</div>
-                            <div class="col-sm-10 dcoasesores"></div>
-                        </div>                    
-                        <div class="row">
-                            <div class="col-sm-2 erevisores">Revisores:</div>
-                            <div class="col-sm-10 drevisores"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2 eestado">Estado:</div>
-                            <div class="col-sm-10 destado"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="text-right">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div class="modal fade" tabindex="-1" role="dialog" id="emensaje">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title nombre-usuario"></h4>
-            </div>
-            <div class="modal-body">
-                <textarea name="mensaje" class="form-control" id="mensaje" cols="70" rows="5"></textarea>
-            </div>
-            <div class="modal-footer">
-                <div class="btn-group" rol="group">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar <i class="fas fa-times"></i></button>
-                    <button type="button" class="btn btn-success" id="idusuario" value="">Enviar <i class="fab fa-telegram-plane"></i> </button>
-                </div>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+@include('academico.partials.emensaje');
 
 @endsection
 
@@ -339,7 +272,8 @@
             }
         });
 
-        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editable.defaults.mode = 'popup';
+        $.fn.editable.defaults.placement = 'left';
         $.fn.editable.defaults.params = function(params){
             params._token = $('meta[name="csrf-token"]').attr("content");
             return params;
@@ -372,9 +306,9 @@
 
         $('#tua').DataTable({
             "scrollY": 480,
-            "scrollCollapse": true,
-            "paging": true,
-            "info": true,
+            "scrollCollapse": false,
+            "paging": false,
+            "info": false,
             "language": {
                 "search"    : "Filtrar:",
                 "lengthMenu": "Mostrar _MENU_ registros",
@@ -410,8 +344,7 @@
         $('[data-toggle="tooltip"]').tooltip()
 
         $('.dt').click(function(){
-            var dt = $(this);
-            //$('.nombre-tesista').text(dt.data('nombre'));
+            var dt = $(this);            
             var r = $.post(
                         "{{ url('/getTesisDetalle') }}",
                         {
@@ -422,11 +355,11 @@
             var tesis = asesor = coasesores = revisores = tsts = '';
             r.done(function(resp){
                 console.log(resp);
-                $('.dtitulo').html('<strong>'+resp['tesis'][0].nom+'</strong>');
-                $('.ddescripcion').html('<strong>'+resp['tesis'][0].desc+'</strong>');
+                $('.dtitulo').html('<strong>'+resp.tesis[0].nom+'</strong>');
+                $('.ddescripcion').html('<strong>'+resp.tesis[0].desc+'</strong>');
                 resp.docentes.forEach(function(v){
-                    switch(v.rol){
-                        case 6: asesor = v.nombre + ', ' + asesor;break;
+                    switch(Number(v.rol)){
+                        case 6: asesor = v.nombre;break;
                         case 7: coasesores = v.nombre + ', ' + coasesores;break;
                         case 8: revisores = v.nombre + ', ' + revisores;break;
                     }

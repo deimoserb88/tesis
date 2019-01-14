@@ -42,11 +42,12 @@
                                     <td>{{ $rol->programa }}</td>
                                     <td class="text-center">
                                         {{--Los que tiene privilegios 1 pueden eliminar cualquier rol, los demas (2 o 3) solo los roles de su programa--}}
-                                        @if(Auth::user()->priv == 1 || (Auth::user()->priv <= 3 && $rol->idprograma == $p[0]->id))
+                                        @php
+                                         if((Auth::user()->priv == 1 || (Auth::user()->priv <= 3 && $rol->idprograma == $p[0]->id)) && $rol->rol > 1){ @endphp
                                             <div class="btn-group" rol="group">
-                                                <a href="{{ url('quitarRol/'.$rol->id.'/'.$u[0]->id) }}" class="btn btn-danger btn-xs"><i class="far fa-trash-alt"></i></a>
-                                            </div>
-                                        @endif
+                                                <a href="{{ url('rolQuitar/'.$rol->id.'/'.$u[0]->id) }}" class="btn btn-danger btn-xs"><i class="far fa-trash-alt"></i></a>
+                                            </div>                                            
+                                        @php } @endphp
                                    </td>
                                 </tr>
                             @endforeach
@@ -76,8 +77,20 @@
                 </div>
                 <div class="modal-body">
 
+                  <div class="form-group{{ isset($errores)?($errores->has('rol') ? ' has-error' : ''):'' }}">
+                    <label for="rol" class="col-sm-4 control-label">Rol</label>
+                    <div class="col-sm-8">
+                        <select name="rol" class="form-control" id="rol" required="required">
+                            {{--  @foreach(range($urol[0]['rol'] + 1,9) as $i)  --}}
+                            <option selected="selected" disabled="disabled">--</option>
+                            @foreach(range($urol + 1,9) as $i)
+                                <option value="{{ $i }}">{{ tesis\Rol::rol($i) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                  </div>
                   <div class="form-group{{ isset($errores)?($errores->has('prog') ? ' has-error' : ''):'' }}">
-                    <label for="password" class="col-sm-4 control-label">Programa</label>
+                    <label for="prog" class="col-sm-4 control-label">Programa</label>
                     <div class="col-sm-8">
                         <select name="prog" class="form-control" id="rprog" required="required">
                             @if(Auth::user()->priv == 1)
@@ -87,22 +100,12 @@
                             @else
                                 <option value="{{ $p[0]->id }}">{{ $p[0]->programa }}</option>
                             @endif
-                        </select>
-                    </div>
-                  </div>
-                  <div class="form-group{{ isset($errores)?($errores->has('rol') ? ' has-error' : ''):'' }}">
-                    <label for="password" class="col-sm-4 control-label">Rol</label>
-                    <div class="col-sm-8">
-                        <select name="rol" class="form-control" id="rol" required="required">
-                            {{--  @foreach(range($urol[0]['rol'] + 1,9) as $i)  --}}
-                            @foreach(range($urol + 1,9) as $i)
-                                <option value="{{ $i }}">{{ tesis\Rol::rol($i) }}</option>
-                            @endforeach
+                                <option value="null" id="na" disabled="disabled">No aplica</option>
                         </select>
                     </div>
                   </div>
                   <div class="form-group hidden dgen {{ isset($errores)?($errores->has('gen') ? ' has-error' : ''):'' }}">
-                    <label for="password" class="col-sm-4 control-label">Generación</label>
+                    <label for="gen" class="col-sm-4 control-label">Generación</label>
                     <div class="col-sm-8">
                         {{ Form::number('gen',date('Y')) }}
                     </div>
@@ -183,6 +186,14 @@
                 $('.dgen').removeClass('hidden');
             }else{
                 $('.dgen').addClass('hidden');
+            }
+            if(r.val() === '2'){
+                $('#na').attr('selected','selected');
+                $('#rprog').attr('disabled','disabled');
+                $('#rprog').removeAttr('required');
+            }else{
+                $('#rprog').removeAttr('disabled');
+
             }
         });
 

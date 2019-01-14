@@ -44,10 +44,10 @@
 			</div>
 			<div class="form-group">
 				{{ Form::label('tesistas','Número de tesistas',['class'=>'col-sm-2']) }}
-				<div class="col-sm-1">
+				<div class="col-sm-2">
 					{{ Form::select('tesistas',['1'=>'1','2'=>'2','3'=>'3',],'1',['class'=>'form-control']) }}
 				</div>
-				<div class="col-sm-9"></div>
+				<div class="col-sm-8"></div>
 			</div>
 
 

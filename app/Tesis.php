@@ -18,7 +18,11 @@ class Tesis extends Model
     ];
 
     public function UT(){
-    	return $this->hasMany('tesis\UT','idtesis','id');
+        return $this->hasMany('tesis\UT','idtesis','id');
+    }
+    
+    public function TS(){
+    	return $this->hasMany('tesis\TS','idtesis','id');
     }
     
     public function Cal(){
@@ -26,7 +30,7 @@ class Tesis extends Model
     }
 
     public static function tesisEstado($edo){
-    	return ['Error','Tesis nueva','Aprobada','Asignada','Concluida','No aprobada','Eliminada'][$edo];
+    	return ['Error','Tesis nueva','Aprobada','Asignada','Concluida','No aprobada','Cancelada'][$edo];
     }
 
 

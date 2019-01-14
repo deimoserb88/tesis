@@ -9,10 +9,12 @@
     <title>{{ config('app.name', 'Tesis') }}</title>
 	<link type="image/x-icon" href="http://www.ucol.mx/cms/img/favicon.ico" rel="icon" />
     <!-- Styles -->
-    {{ Html::style('public/assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}
+    {{-- Html::style('public/assets/vendor/bootstrap/dist/css/bootstrap.min.css') --}}
+    {{ Html::style('public/css/app.css') }}
+
     {{ Html::style('https://fonts.googleapis.com/css?family=Lato:100,300,400,700') }}<!-- Fonts -->
     {{-- Html::style('https://file.myfontastic.com/YkvRruhw4K6cVhm9Z6RdGC/icons.css') --}}<!-- Iconos -->
-    {{ Html::style('http://www.ucol.mx/cms/headerfooterapp.css') }}	 {{-- CSS de la universidad --}}
+    {{ Html::style('http://www.ucol.mx/cms/headerfooterapp.css') }}  {{-- CSS de la universidad --}}
 
     @yield('estilos') <!--Para agregar estilos propios de cada modulo-->
 
@@ -78,18 +80,22 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <ul class="nav navbar-nav">
                     @if(Auth::user()->priv < 5)
-                        <li><a href="{{ url('/tesis') }}">Tesis <i class="fas fa-file-alt"></i></a></li>
+                        <li><a href="{{ url('/tesis') . '/' . (date('Y') + (date('m')<=6?0:1)) }}">Tesis <i class="fas fa-file-alt"></i></a></li>
                         <li><a href="{{ url('/usuariosTesistas') }}">Tesistas <i class="fas fa-graduation-cap"></i></a></li>
                     @endif
 
-                    @if(Auth::user()->priv <= 2 || $rol <= 4)
+                    @if(Auth::user()->priv <= 1 || $rol <= 4)
                         <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios académicos <i class="fas fa-users"></i></a></li>
                     @endif
+                    <li><a href="{{ route('agenda') }}">Calendario <i class="far fa-calendar-alt"></i></a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     @yield('menu_items')
+                    <li><a href="https://recursos.ucol.mx/tesis/index.php" target="_blank">
+                        El Portal de la Tesis <i class="fas fa-info-circle"></i>
+                    </a></li>                    
                     <li>
                         <a href="{{ url('/mensajes/'.Auth::user()->id.'/2') }}">
                             @php
@@ -158,9 +164,10 @@
 </footer>
 
 
-    {{ Html::script('/public/assets/vendor/jquery/dist/jquery.min.js') }}
-    {{ Html::script('/public/assets/vendor/bootstrap/dist/js/bootstrap.min.js') }}
-    {{ Html::script('/public/js/typeahead.bundle.js') }}
+    {{-- Html::script('/public/assets/vendor/jquery/dist/jquery.min.js') --}}
+    {{-- Html::script('/public/assets/vendor/bootstrap/dist/js/bootstrap.min.js') --}}
+    {{-- Html::script('/public/js/typeahead.bundle.js') --}}
+    {{ Html::script('/public/js/app.js') }}
     {{ Html::script('https://use.fontawesome.com/releases/v5.0.1/js/all.js') }}
 
    	@yield('scripts'){{--Para scripts propios del módulo--}}

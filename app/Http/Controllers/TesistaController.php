@@ -11,6 +11,7 @@ use tesis\Tesis;
 use tesis\Tesista;
 use tesis\Programa;
 use tesis\UT;
+use tesis\TS;
 use tesis\Rol;
 use tesis\Mensaje;
 
@@ -78,5 +79,41 @@ class TesistaController extends Controller
         }
     }
 
+    public function tesis(Request $request){
+        $gen = isset($request->gen) ? $request->gen : '%%';
+        $g = Tesis::select('gen')->distinct()->orderBy('gen')->get();        
+        $tesis = Tesis::select('tesis.*','programa.abrev')
+                    ->join('programa','tesis.idprograma','=','programa.id')
+                    ->where([['gen','like',$gen],['estado','>',1]])
+                    ->get();
+        $miTesis = User::select('users.nombre','tesis.*')
+                    ->join('tesista','users.id','=','tesista.idusuario')
+                    ->join('tesis','tesista.idtesis','=','tesis.id')
+                    ->where('users.id',Auth::user()->id)
+                    ->get();
+        $mts = TS::select('idtesis')->where('idusuario',Auth::user()->id)->get()->toArray();//mis tesis seleccionadas
+        return view('tesista.tesis',compact('tesis','miTesis','gen','g','mts'));
+    }
+
+    public function tesisSeleccionar(Request $request){
+         if($request->ajax()){            
+            $ts  = TS::where([['idtesis',$request->idtesis],['idusuario',Auth::user()->id]])->count();
+            $tts = TS::where('idusuario',Auth::user()->id)->count();
+            if($ts==0){
+                if($tts<3){
+                    TS::insert([
+                        ['idtesis'=>$request->idtesis,'idusuario'=>Auth::user()->id]
+                    ]);
+                    return ['r'=>1];//1 seleccionar tesis
+                }else{
+                    return ['r'=>3];//3 ya selecciono tres tesis        
+                }
+            }else{            
+                TS::where([['idtesis',$request->idtesis],['idusuario',Auth::user()->id]])->delete();
+                return ['r'=>2];//2 retirar seleccion de la tesis
+            }
+        }         
+        return [];
+    }
 
 }

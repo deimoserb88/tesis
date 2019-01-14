@@ -14,6 +14,16 @@ class Cal extends Model
      * @var array
      */
     protected $fillable = [
-        'eval','cal', 'obs'
+        'eval','cal', 'obs','idtesis','idusuario'
     ];
+
+    public function User(){
+    	return $this->belongsTo('tesis\User','idusuario');
+    }
+
+    public function Tesis(){
+    	return $this->belongsTo('tesis\Tesis','idtesis');
+    }
+
+    
 }

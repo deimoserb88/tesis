@@ -76,17 +76,20 @@
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
-{{--                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/tesis') }}">Tesis <i class="fas fa-file-alt"></i></a></li>
-                    <li><a href="{{ url('/usuariosTesistas') }}">Tesistas <i class="fas fa-graduation-cap"></i></a></li>
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url('/tesisTesistas') . '/' . (date('Y') + (date('m')<=6?0:1)) }}">Ver todas las tesis <i class="fas fa-file-alt"></i></a></li>
+{{--                     <li><a href="{{ url('/usuariosTesistas') }}">Tesistas <i class="fas fa-graduation-cap"></i></a></li>
                     @if(Auth::user()->priv <= 2)
                         <li><a href="{{ url('/usuariosAcademicos') }}">Usuarios <i class="fas fa-users"></i></a></li>
                     @endif
-                </ul>
- --}}
+ --}}                </ul>
+
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     @yield('menu_items')
+                    <li><a href="https://recursos.ucol.mx/tesis/index.php" target="_blank">
+                        El Portal de la Tesis <i class="fas fa-info-circle"></i>
+                    </a></li>
                     <li>
                         <a href="{{ url('/mensajes/'.Auth::user()->id.'/2') }}">
                             @php
@@ -103,7 +106,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ explode(" ",Auth::user()->nombre)[0]." (".Auth::user()->priv.")"  }} <span class="caret"></span>
+                            {{ explode(" ",Auth::user()->nombre)[0] }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ url('/tesistaHome') }}">Panel de actividades <i class="fas fa-tasks"></i></a></li>

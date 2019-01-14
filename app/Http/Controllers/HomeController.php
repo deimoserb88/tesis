@@ -38,8 +38,9 @@ class HomeController extends Controller
             $urol = Rol::where('idusuario',Auth::user()->id)->min('rol');            
             return view('academico.home',compact('urol'));
         }elseif(Auth::user()->priv == 5){
-            $prg = Tesista::select('idprograma')->where('idusuario',Auth::user()->id)->get()->toArray();
-            array_push($prg,['rol'=>9]);
+            //$prg = Tesista::select('idprograma')->where('idusuario',Auth::user()->id)->get()->toArray();
+            $idprg = Tesista::select('idprograma')->where('idusuario',Auth::user()->id)->get()->toArray();
+            $prg[]=['rol'=>9,'idprograma'=>$idprg[0]['idprograma']];
             $request->session()->put('rol',$prg);
             return redirect()->action('TesistaController@index');//view('tesista.home');
         }else{ //priv == 9, es un usuario nuevo al que no se le ha asignado rol o tesis
@@ -50,7 +51,7 @@ class HomeController extends Controller
                 $u = User::select('users.id','users.nombre','users.email','users.priv','rol.rol','programa.abrev')
                             ->leftJoin('rol','users.id','=','rol.idusuario')
                             ->leftJoin('programa','rol.idprograma','=','programa.id')
-                            ->where('rol.rol','<=','4')
+                            ->where([['rol.rol','<=','4'],['users.nocontrol','!=','0000']])
                             ->distinct()
                             ->orderBy('rol.rol','asc')
                             ->get();

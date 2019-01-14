@@ -1,0 +1,25 @@
+{
+  "name": "tesis",
+  "description": "",
+  "main": "",
+  "authors": [
+    "deimoserb88 <erosales@ucol.mx>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/deimoserb88/tesis",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/assets/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "datatables": "^1.10.15",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "fullcalendar": "^3.9.0",
+    "jquery-ui": "^1.12.1"
+  }
+}

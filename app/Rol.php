@@ -22,7 +22,7 @@ class Rol extends Model
     }     
 
     public static function rol($r){
-		return [0 =>'root',
+		return [0 =>'Sin rol',
                 1 =>'Director',
                 2 =>'Coordinador académico',
                 3 =>'Coordinador de carrera',

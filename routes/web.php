@@ -63,11 +63,13 @@ Route::get('/usuarioRoles/{id}/{d?}','AcademicoController@usuarioRoles')->name('
 
 Route::post('/rolAsignar','AcademicoController@rolAsignar')->name('rolAsignar');
 
+Route::get('/rolQuitar/{id}/{idusuario}', 'AcademicoController@rolQuitar')->name('rolQuitar');
+/*
 Route::get('/quitarRol/{id}/{idusuario}', function($id,$idusuario){
 	tesis\Rol::where('id','=',$id)->delete();
 	return redirect()->route('usuarioRoles',['id'=>$idusuario]);
 });
-
+*/
 Route::get('/usuarioTesis/{id}/{d?}', function($id,$d='T'){
 	return redirect()->route('usuarioRoles',['id'=>$id,'d'=>$d]);
 })->name('usuarioTesis');
@@ -80,13 +82,17 @@ Route::post('/contrasenaCambiar','AcademicoController@contrasenaCambiar')->name(
 
 
 
-//**************************
+//********************************************************************************************************
 
 
 /**
  * Tesis
  */
-Route::get('/tesis','AcademicoController@tesis')->name('tesis');
+//***Ruta para los academicos
+Route::get('/tesis/{gen?}','AcademicoController@tesis')->name('tesisA');
+
+//***Ruta para los tesistas
+Route::get('/tesisTesistas/{gen?}','TesistaController@tesis')->name('tesisT');
 
 Route::get('/tesisNueva', 'AcademicoController@tesisNueva')->name('tesisNueva');
 
@@ -94,7 +100,7 @@ Route::get('/tesisEditar/{id}', 'AcademicoController@tesisEditar')->name('tesisE
 
 Route::get('/tesisAprobar/{id}', function($id){
 	tesis\Tesis::where('id','=',$id)->update(['estado'=>2]);
-	return redirect()->route('tesis');
+	return redirect()->route('tesisA');
 });
 
 Route::get('/tesisTesista/{id}','AcademicoController@tesisTesista')->name('tesisTesista');
@@ -107,7 +113,19 @@ Route::post('/tesisAsignar','AcademicoController@tesisAsignar')->name('tesisAsig
 /**
  * Ruta para remover docentes (coasesores y revisores) a la tesis
  */
-Route::get('/tesisRemoverRevisor/{idusuario}/{idtesis}','AcademicoController@tesisRemoverRevisor')->name('tesisRemoverRevisor');
+Route::get('/tesisRemoverRevisor','AcademicoController@tesisRemoverRevisor')->name('tesisRemoverRevisor');
+
+/*
+	Ruta para que los tesistas seleccionen la tesis
+ */
+Route::post('/tesisSeleccionar','TesistaController@tesisSeleccionar')->name('tesisSeleccionar');
+
+
+/**
+ * Ruta para definir estado de la tesis
+ */
+Route::post('/tesisEstado', 'AcademicoController@tesisEstado')->name('tesisEstado');
+
 
 /**
  * Rutas para asignar o remover tesistas de la tesis
@@ -123,6 +141,10 @@ Route::get('/tesisEliminar/{idtesis}', function($idtesis){
 	tesis\Tesis::where('id',$idtesis)->delete();
 	return redirect()->action('AcademicoController@tesis');
 });
+
+Route::get('/tesisCalifica',function(){
+	return view('academico.tesiscalifica');
+})->name('tesisCalifica');
 
 
 Route::post('/getTesistas', function(Request $request){
@@ -192,7 +214,35 @@ Route::post('/asignaGen', 'AcademicoController@asignaGen')->name('asignaGen');
 Route::post('/tesistaProGen','HomeController@tesistaProGen')->name('tesistaProGen');
 
 
-/**
+/**Rutas para las calificaciones
+*
+*/
+Route::get('cal','CalController@index')->name('cal');
+				
+Route::post('store','CalController@store')->name('store');
+
+Route::post('cal/{idcal}/{cal}','CalController@update')->name('update');
+
+Route::get('eliminaCal/{id}','CalController@destroy')->name('destroy');
+
+/********************************************************************************************************
+ * Calendario (actividades)
+ */
+Route::get('agenda','AgendaController@index')->name('agenda');
+
+Route::post('actividadGuardar','AgendaController@store')->name('actividadGuardar');
+
+Route::post('actividadActualizar','AgendaController@update')->name('actividadActualizar');
+
+Route::post('cambiarActividad','AgendaController@cambiarActividad')->name('cambiarActividad');
+
+//obtener las actividades cuando hay cambio de mes
+Route::get('obtenerActividades/{mes}/{anio}','AgendaController@obtenerActividades')->name('obtenerActividades');
+
+
+
+
+/********************************************************************************************************
  * Mensajes
  */
 

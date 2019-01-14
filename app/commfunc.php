@@ -1,5 +1,6 @@
 <?php
 
+
     function tipoUsuario($tu){
         switch($tu){
             case 0:;
@@ -12,6 +13,19 @@
 
         }
     }
+
+    //los programas del plantel
+    function programas($uid){
+        if(Auth::user()->priv == 1){//si tiene privilegios 1 (el mas alto)
+            return tesis\Programa::all();
+        }else{//con privilegios menores o roles entre 1 y 4
+            return tesis\Rol::select('programa.programa','programa.id')
+                        ->join('programa','rol.idprograma','=','programa.id')
+                        ->where([['rol.idusuario',$uid],['rol.rol','<=',4]])
+                        ->get();
+        }
+    }
+
 
 /*    function tipoUsuario($tu){
         switch($tu){

@@ -14,7 +14,7 @@
                     <a href="#" class="dato" data-pk="{{ Auth::user()->id }}" id="nombre" data-campo="nombre">
                         {{ Auth::user()->nombre }}</a>
                     <div class="row">
-                        <div class="col-md-3">No. de trabajador</div>
+                        <div class="col-md-3">No. de {{ Auth::user()->priv < 5 ? 'trabajador' : 'cuenta' }}</div>
                         <div class="col-md-9">
                             <a href="#" class="dato" data-pk="{{ Auth::user()->id }}" id="nocontrol" data-campo="nocontrol">
                                 {{ Auth::user()->nocontrol }}
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3">Actididad  general</div>
+                        <div class="col-md-3">Actividad  general</div>
                         <div class="col-md-9">{{ tesis\User::priv(Auth::user()->priv) }}</div>
                     </div>
                 </div>

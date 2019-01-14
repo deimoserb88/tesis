@@ -41,7 +41,7 @@
                                   </div>
                                 </div>
                                 <div class="item">
-                                  <img src="{{ URL::to('/') }}/public/images/4.jpg" class="img-thumbnail" alt="">
+                                  <img src="{{ URL::to('/') }}/public/images/4.png" class="img-thumbnail" alt="">
                                   <div class="carousel-caption">
                                     
                                   </div>
@@ -57,7 +57,7 @@
                             @if (Auth::guest())
                               
                               <br><br>
-                              <button type="button" onclick="window.location.href='{{ url('/login') }}'" class="btn btn-primary btn-block">Iniciar sesión <i class="fa fa-btn fa-sign-in"></i></button>
+                              <button type="button" onclick="window.location.href='{{ route('login') }}'" class="btn btn-primary btn-block">Iniciar sesión <i class="fa fa-btn fa-sign-in"></i></button>
 
                             @else
 
